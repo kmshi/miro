@@ -15,15 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-# FIXME import * is really bad practice..  At the very least, lest keep it at
-# the top, so it cant overwrite other symbols.
-from item import *
 
 from HTMLParser import HTMLParser,HTMLParseError
 from cStringIO import StringIO
 from copy import copy
 from datetime import datetime, timedelta
 from gtcache import gettext as _
+from feedparser import FeedParserDict
 from inspect import isfunction
 from new import instancemethod
 from urlparse import urlparse, urljoin
@@ -34,7 +32,8 @@ import re
 import traceback
 import xml
 
-from database import defaultDatabase, DatabaseConstraintError
+from database import defaultDatabase, DatabaseConstraintError, DDBObject
+from databasehelper import makeSimpleGetSet
 from httpclient import grabURL, NetworkError
 from iconcache import iconCacheUpdater, IconCache
 from templatehelper import quoteattr, escape, toUni
@@ -43,14 +42,16 @@ import app
 import config
 from frontends.html import dialogs
 import eventloop
+import filters
 import folder
 import prefs
 import resources
 import downloader
-from util import returnsUnicode, unicodify, chatter, checkU, checkF, quoteUnicodeURL
+from util import (returnsUnicode, unicodify, chatter, checkU, checkF, quoteUnicodeURL, getFirstVideoEnclosure)
 from fileutil import miro_listdir
 from platformutils import filenameToUnicode, makeURLSafe, unmakeURLSafe, osFilenameToFilenameType, FilenameType
 import filetypes
+import item as itemmod
 import views
 import indexes
 import searchengines
@@ -566,7 +567,7 @@ class Feed(DDBObject):
     ICON_CACHE_SIZES = [
         (20, 20),
         (76, 76),
-    ] + Item.ICON_CACHE_SIZES
+    ]
 
     def __init__(self,url, initiallyAutoDownloadable=True):
         DDBObject.__init__(self, add=False)
@@ -1325,7 +1326,7 @@ class RSSFeedImpl(FeedImpl):
 
     def _handleNewEntry(self, entry, channelTitle):
         """Handle getting a new entry from a feed."""
-        item = Item(entry, feed_id=self.ufeed.id)
+        item = itemmod.Item(entry, feed_id=self.ufeed.id)
         if not filters.matchingItems(item, self.ufeed.searchTerm):
             item.remove()
         item.setChannelTitle(channelTitle)
@@ -1991,9 +1992,9 @@ class ScraperFeedImpl(FeedImpl):
         # Anywhere we call this, we need to convert the input back to unicode
         title = feedparser.sanitizeHTML (title, "utf-8").decode('utf-8')
         if dict.has_key('thumbnail') > 0:
-            i=Item(FeedParserDict({'title':title,'enclosures':[FeedParserDict({'url':link,'thumbnail':FeedParserDict({'url':dict['thumbnail']})})]}),linkNumber = linkNumber, feed_id=self.ufeed.id)
+            i=itemmod.Item(FeedParserDict({'title':title,'enclosures':[FeedParserDict({'url':link,'thumbnail':FeedParserDict({'url':dict['thumbnail']})})]}),linkNumber = linkNumber, feed_id=self.ufeed.id)
         else:
-            i=Item(FeedParserDict({'title':title,'enclosures':[FeedParserDict({'url':link})]}),linkNumber = linkNumber, feed_id=self.ufeed.id)
+            i=itemmod.Item(FeedParserDict({'title':title,'enclosures':[FeedParserDict({'url':link})]}),linkNumber = linkNumber, feed_id=self.ufeed.id)
         if self.ufeed.searchTerm is not None and not filters.matchingItems(i, self.ufeed.searchTerm):
             i.remove()
             return
@@ -2226,7 +2227,7 @@ class DirectoryWatchFeedImpl(FeedImpl):
                     all_files.append(subfile)
             for file in all_files:
                 if file not in knownFiles and filetypes.isVideoFilename(platformutils.filenameToUnicode(file)):
-                    FileItem(file, feed_id=self.ufeed.id)
+                    itemmod.FileItem(file, feed_id=self.ufeed.id)
 
         for item in self.items:
             if not os.path.isfile(item.getFilename()):
@@ -2297,7 +2298,7 @@ class DirectoryFeedImpl(FeedImpl):
             files, dirs = miro_listdir(moviesDir)
             for file in files:
                 if not file in knownFiles:
-                    FileItem(file, feed_id=self.ufeed.id)
+                    itemmod.FileItem(file, feed_id=self.ufeed.id)
             for dir in dirs:
                 if dir in knownFiles:
                     continue
@@ -2325,11 +2326,11 @@ class DirectoryFeedImpl(FeedImpl):
                     # would have some things shown.
                     if found != 0:
                         for subfile in not_found:
-                            FileItem(subfile, feed_id=self.ufeed.id)
+                            itemmod.FileItem(subfile, feed_id=self.ufeed.id)
                     # But if not, it's probably a
                     # directory added wholesale.
                     else:
-                        FileItem(dir, feed_id=self.ufeed.id)
+                        itemmod.FileItem(dir, feed_id=self.ufeed.id)
 
         for item in self.items:
             if not os.path.exists(item.getFilename()):

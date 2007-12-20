@@ -27,13 +27,13 @@ from platformutils import unicodeToFilename
 import config
 import prefs
 import time
-import views
 import random
 import imageresize
 
 RUNNING_MAX = 3
     
 def clearOrphans():
+    import views
     knownIcons = set()
     for item in views.items:
         if item.iconCache and item.iconCache.filename:
