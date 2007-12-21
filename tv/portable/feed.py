@@ -35,11 +35,11 @@ import xml
 from database import defaultDatabase, DatabaseConstraintError, DDBObject
 from databasehelper import makeSimpleGetSet
 from httpclient import grabURL, NetworkError
-from iconcache import iconCacheUpdater, IconCache
 from templatehelper import quoteattr, escape, toUni
 from string import Template
 import app
 import config
+import iconcache
 from frontends.html import dialogs
 import eventloop
 import filters
@@ -583,7 +583,7 @@ class Feed(DDBObject):
         self.errorState = False
         self.loading = True
         self.actualFeed = FeedImpl(url,self)
-        self.iconCache = IconCache(self, is_vital = True)
+        self.iconCache = iconcach.IconCache(self, is_vital = True)
         self.informOnError = True
         self.folder_id = None
         self.searchTerm = None
@@ -1111,7 +1111,7 @@ $shortAppName.\n\nDo you want to try to load this channel anyway?"""))
         return False
 
     def updateIcons(self):
-        iconCacheUpdater.clearVital()
+        iconcache.iconCacheUpdater.clearVital()
         for item in self.items:
             item.iconCache.requestUpdate(True)
         for feed in views.feeds:
@@ -1127,7 +1127,7 @@ $shortAppName.\n\nDo you want to try to load this channel anyway?"""))
 
     def onRestore(self):
         if (self.iconCache == None):
-            self.iconCache = IconCache (self, is_vital = True)
+            self.iconCache = iconcach.IconCache (self, is_vital = True)
         else:
             self.iconCache.dbItem = self
             self.iconCache.requestUpdate(True)

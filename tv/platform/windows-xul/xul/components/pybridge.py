@@ -31,6 +31,7 @@ try:
     import gtcache
     gtcache.init()
     import app
+    import controller
     import eventloop
     import config
     import frontends.html
@@ -45,7 +46,7 @@ try:
     import menubar
     import feed
     import database
-    from frontend_implementation import HTMLDisplay
+    from miroplatform.frontends.html import HTMLDisplay
     from frontend_implementation.UIBackendDelegate import UIBackendDelegate
     from eventloop import asUrgent, asIdle
     from platformutils import getLongPathName
@@ -272,7 +273,7 @@ class PyBridge:
         initializeProxyObjects(window)
         registerHttpObserver()
         initializeHTTPProxy()
-        app.main()
+        controller.main()
 
     @asUrgent
     def initializeViews(self):
