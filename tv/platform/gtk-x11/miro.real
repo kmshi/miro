@@ -56,8 +56,8 @@ def startapp():
     import platformutils
     platformutils.initializeLocale()
 
+    import miroplatform.options
     import controller
-    import frontend
     import prefs
     import config
 
@@ -65,15 +65,14 @@ def startapp():
     # command line, so config.get() wouldn't return the correct value
     # anyway.  Maybe, eventually, we should integrate command line
     # config support into prefs.py and config.py.
-    frontend.use_xine_hack = options.use_xv_hack
-    if frontend.use_xine_hack is None:
-        frontend.use_xine_hack = config.get(prefs.USE_XINE_XV_HACK)
-    #print "USING XINE XV HACK: %s" % frontend.use_xine_hack
-    frontend.defaultXineDriver = options.xine_driver
-    if frontend.defaultXineDriver is None:
-        frontend.defaultXineDriver = config.get(prefs.DEFAULT_XINE_DRIVER)
-    #print "Xine driver is %s" % frontend.defaultXineDriver
-    if options.theme: frontend.themeName = options.theme
+    if options.use_xv_hack is None:
+        options.use_xv_hack = config.get(prefs.USE_XINE_XV_HACK)
+    if options.xine_driver is None:
+        options.xine_driver = config.get(prefs.DEFAULT_XINE_DRIVER)
+    miroplatform.options.shouldSyncX = options.sync
+    miroplatform.options.useXineHack = options.use_xv_hack
+    miroplatform.options.defaultXineDriver = options.xine_driver
+    miroplatform.options.themeName = options.theme
 
     import singleclick
     for i in xrange(len(args)):
@@ -92,8 +91,6 @@ if options.version:
 elif options.profile:
     import profile
     import eventloop
-    if options.sync:
-        pass
     def main():
         import controller
         controller.main()

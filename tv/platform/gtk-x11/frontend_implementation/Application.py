@@ -20,6 +20,7 @@ import gtk
 import threading
 from frontend_implementation.gtk_queue import queue
 from frontends.html.main import HTMLApplication
+from miroplatform import options
 import app
 import gtcache
 import config
@@ -39,11 +40,8 @@ class Application(HTMLApplication):
         queue.main_thread = threading.currentThread()
         platformutils.setMainThread()
         gtk.gdk.threads_init()
-        # We import frontend here to avoid a recursive import, since frontend
-        # imports this file
-        import frontend
-        if frontend.themeName is not None:
-            config.load(frontend.themeName)
+        if options.themeName is not None:
+            config.load(options.themeName)
         self.startup()
         gtk.main()
         app.controller.onShutdown()
