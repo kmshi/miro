@@ -583,7 +583,7 @@ class Feed(DDBObject):
         self.errorState = False
         self.loading = True
         self.actualFeed = FeedImpl(url,self)
-        self.iconCache = iconcach.IconCache(self, is_vital = True)
+        self.iconCache = iconcache.IconCache(self, is_vital = True)
         self.informOnError = True
         self.folder_id = None
         self.searchTerm = None
@@ -1127,7 +1127,7 @@ $shortAppName.\n\nDo you want to try to load this channel anyway?"""))
 
     def onRestore(self):
         if (self.iconCache == None):
-            self.iconCache = iconcach.IconCache (self, is_vital = True)
+            self.iconCache = iconcache.IconCache (self, is_vital = True)
         else:
             self.iconCache.dbItem = self
             self.iconCache.requestUpdate(True)
