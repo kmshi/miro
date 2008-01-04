@@ -64,9 +64,6 @@ else:
     class PlaybackController:
         pass
 
-def exit(returnCode):
-    return returnCode
-
 if hasGTK:
     @gtkAsyncMethod
     def inMainThread(function, args=None, kwargs=None):

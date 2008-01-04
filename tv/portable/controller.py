@@ -424,7 +424,7 @@ Are you sure you want to stop watching these %s directories?""") % len(feeds)
 
         except:
             signals.system.failedExn("while shutting down")
-            frontend.exit(1)
+            platformutils.exit(1)
 
     ### Handling events received from the OS (via our base class) ###
 
