@@ -25,12 +25,15 @@ import gtcache
 gtcache.init()
 
 import config
+import controller
+import miroplatform.options
+import platformutils
 import prefs
+import singleclick
 
 if '--unittest' in sys.argv:
     # handle this outside optparse, because unittest has its own option set
     sys.argv.remove('--unittest')
-    import controller
     import unittest
     import test
     unittest.main(module=test)
@@ -53,13 +56,12 @@ parser.add_option('--theme', dest='theme', metavar='<theme>', help='Theme to use
 (options, args) = parser.parse_args()
 
 def startapp():
-    import platformutils
     platformutils.initializeLocale()
+    # Create miro directories in the user's home
+    support_dir = config.get(prefs.SUPPORT_DIRECTORY)
+    if not os.path.exists(support_dir):
+        os.makedirs(support_dir)
 
-    import miroplatform.options
-    import controller
-    import prefs
-    import config
 
     # These aren't in config because we can override them with the
     # command line, so config.get() wouldn't return the correct value
@@ -74,7 +76,6 @@ def startapp():
     miroplatform.options.defaultXineDriver = options.xine_driver
     miroplatform.options.themeName = options.theme
 
-    import singleclick
     for i in xrange(len(args)):
         if args[i].startswith('file://'):
             args[i] = args[i][len('file://'):]

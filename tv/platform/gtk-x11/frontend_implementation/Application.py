@@ -20,7 +20,7 @@ import gtk
 import threading
 from frontend_implementation.gtk_queue import queue
 from frontends.html.main import HTMLApplication
-from miroplatform import options
+from miroplatform import mozsetup, options
 import app
 import gtcache
 import config
@@ -34,6 +34,7 @@ import platformutils
 
 class Application(HTMLApplication):
     def Run(self):
+        mozsetup.setupMozillaEnvironment()
         gtk.glade.bindtextdomain("miro", config.get(prefs.GETTEXT_PATHNAME))
         gtk.glade.textdomain("miro")
 

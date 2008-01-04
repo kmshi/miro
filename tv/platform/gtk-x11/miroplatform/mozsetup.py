@@ -80,7 +80,7 @@ user_pref("network.proxy.share_proxy_settings", true);
 
 @gtkAsyncMethod
 def setupMozillaEnvironment():
-    """Do all the work nessecary setup the DTV Mozilla environment."""
+    """Do all the work necessary setup the Miro Mozilla environment."""
     createProfileDirectory()
     createPrefsJS()
 

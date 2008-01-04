@@ -64,16 +64,6 @@ else:
     class PlaybackController:
         pass
 
-# Create miro directories in the user's home
-support_dir = config.get(prefs.SUPPORT_DIRECTORY)
-os.environ['APPDATA'] = support_dir # Needed to make bittorrent happy
-if not os.path.exists(support_dir):
-    os.makedirs(support_dir)
-
-if hasGTK:
-    import mozsetup
-    mozsetup.setupMozillaEnvironment()
-
 def exit(returnCode):
     return returnCode
 
