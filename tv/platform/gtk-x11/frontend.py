@@ -26,8 +26,6 @@ try:
 except ImportError:
     print "DTV: Warning: could not import GTK (is DISPLAY set?)"
     hasGTK = False
-else:
-    from frontend_implementation.gtk_queue import gtkAsyncMethod
 
 if hasGTK:
     # Import MozillaBrowser ASAP.  On some systems the gtkmozembed
@@ -63,15 +61,6 @@ else:
         pass
     class PlaybackController:
         pass
-
-if hasGTK:
-    @gtkAsyncMethod
-    def inMainThread(function, args=None, kwargs=None):
-        if args is None:
-            args = ()
-        if kwargs is None:
-            kwargs = {}
-        function(*args, **kwargs)
 
 ###############################################################################
 ###############################################################################
