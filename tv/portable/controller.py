@@ -20,6 +20,8 @@ of Miro.
 """
 
 import logging
+import os
+import shutil
 import threading
 import urllib
 
@@ -552,3 +554,14 @@ Are you sure you want to stop watching these %s directories?""") % len(feeds)
     def newDownload(self, url = None):
         return GUIActionHandler().addDownload(url)
 
+    @eventloop.asUrgent
+    def saveVideo(self, currentPath, savePath):
+        logging.info("saving video %s to %s" % (currentPath, savePath))
+        try:
+            shutil.copyfile(currentPath, savePath)
+        except:
+            title = _('Error Saving Video')
+            name = os.path.basename(currentPath)
+            text = _('An error occured while trying to save %s.  Please check that the file has not been deleted and try again.') % util.clampText(name, 50)
+            dialogs.MessageBoxDialog(title, text).run()
+            logging.warn("Error saving video: %s" % traceback.format_exc())
