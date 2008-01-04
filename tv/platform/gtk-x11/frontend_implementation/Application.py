@@ -18,7 +18,7 @@
 import gtk
 
 import threading
-from frontend_implementation.gtk_queue import queue
+from frontend_implementation.gtk_queue import queue, gtkAsyncMethod
 from frontends.html.main import HTMLApplication
 from miroplatform import mozsetup, options
 import app
@@ -46,6 +46,10 @@ class Application(HTMLApplication):
         self.startup()
         gtk.main()
         app.controller.onShutdown()
+
+    @gtkAsyncMethod
+    def quitUI(self):
+        gtk.main_quit()
 
 ###############################################################################
 ###############################################################################

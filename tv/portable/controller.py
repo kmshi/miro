@@ -365,8 +365,7 @@ Are you sure you want to stop watching these %s directories?""") % len(feeds)
             app.db.liveStorage.close()
         logging.info ("Shutting down event loop")
         eventloop.quit()
-        logging.info ("Shutting down frontend")
-        frontend.quit()
+        signals.system.shutdown()
 
     @eventloop.asUrgent
     def setGuideURL(self, guideURL):

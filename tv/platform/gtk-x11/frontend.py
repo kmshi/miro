@@ -69,10 +69,6 @@ def exit(returnCode):
 
 if hasGTK:
     @gtkAsyncMethod
-    def quit(emergencyExit=False):
-        gtk.main_quit()
-
-    @gtkAsyncMethod
     def inMainThread(function, args=None, kwargs=None):
         if args is None:
             args = ()
