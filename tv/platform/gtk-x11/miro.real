@@ -74,7 +74,9 @@ def startapp():
     miroplatform.options.shouldSyncX = options.sync
     miroplatform.options.useXineHack = options.use_xv_hack
     miroplatform.options.defaultXineDriver = options.xine_driver
-    miroplatform.options.themeName = options.theme
+    if options.theme:
+        miroplatform.options.themeName = options.theme
+        print 'Theme is %s' % options.theme
 
     for i in xrange(len(args)):
         if args[i].startswith('file://'):

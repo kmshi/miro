@@ -32,6 +32,7 @@ import os
 import traceback
 
 from clock import clock
+import app
 import autodler
 import config
 import database
@@ -55,6 +56,7 @@ import util
 import searchengines
 import storedatabase
 import views
+import opml
 
 class StartupError(Exception):
     def __init__(self, summary, description):
@@ -234,7 +236,7 @@ def setupGuides():
 
     if newGuide:
         if config.get(prefs.MAXIMIZE_ON_FIRST_RUN).lower() not in ['false','no','0']:
-            delegate.maximizeWindow()
+            app.delegate.maximizeWindow()
         for temp_guide in unicode(config.get(prefs.ADDITIONAL_CHANNEL_GUIDES)).split():
             if views.guides.getItemWithIndex(indexes.guidesByURL, temp_guide) is None:
                 guide.ChannelGuide(temp_guide)
@@ -251,8 +253,8 @@ def _getInitialChannelGuide():
     if default_guide is None:
         newGuide = True
         logging.info ("Spawning Miro Guide...")
-        default_guide = guide.ChannelGuide(config.get(prefs.CHANNEL_GUIDE_URL),
-                 config.get(prefs.CHANNEL_GUIDE_ALLOWED_URLS).split())
+        default_guide = guide.ChannelGuide(unicode(config.get(prefs.CHANNEL_GUIDE_URL)),
+                                           unicode(config.get(prefs.CHANNEL_GUIDE_ALLOWED_URLS)).split())
         initialFeeds = resources.path("initial-feeds.democracy")
         if os.path.exists(initialFeeds):
             urls = subscription.parseFile(initialFeeds)

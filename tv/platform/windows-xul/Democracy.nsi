@@ -64,6 +64,9 @@ Var TACKED_ON_FILE
 !insertmacro un.GetParameters
 !insertmacro un.GetOptions
 
+
+ReserveFile "iHeartMiro-installer-page.ini"
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Pages                                                                     ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -73,12 +76,14 @@ Var TACKED_ON_FILE
 !insertmacro MUI_PAGE_WELCOME
 
 ; License page
-!insertmacro MUI_PAGE_LICENSE "license.txt"
+; !insertmacro MUI_PAGE_LICENSE "license.txt"
 
 ; Component selection page
 !define MUI_COMPONENTSPAGE_TEXT_COMPLIST \
   "Please choose which optional components to install."
 !insertmacro MUI_PAGE_COMPONENTS
+
+Page custom iHeartMiroInstall iHeartMiroInstallLeave
 
 ; Installation directory selection page
 !insertmacro MUI_PAGE_DIRECTORY
@@ -562,6 +567,10 @@ Section -NotifyShellExentionChange
   System::Call 'Shell32::SHChangeNotify(i 0x8000000, i 0, i 0, i 0)'
 SectionEnd
 
+Function un.onInit
+  StrCpy $APP_NAME "${CONFIG_LONG_APP_NAME}"
+FunctionEnd
+
 Function .onInit
   ; Process the tacked on file
   StrCpy $THEME_NAME ""
@@ -570,6 +579,7 @@ Function .onInit
   StrCpy $THEME_TEMP_DIR ""
   StrCpy $APP_NAME "${CONFIG_LONG_APP_NAME}"
 
+  !insertmacro MUI_INSTALLOPTIONS_EXTRACT "iHeartMiro-installer-page.ini"
 
   GetTempFileName $TACKED_ON_FILE
   Delete "$TACKED_ON_FILE"  ; The above macro creates the file
@@ -591,8 +601,7 @@ Function .onInit
 
   FileClose $0
 
-  !tempfile THEME_TEMP_DIR
-  StrCpy $THEME_TEMP_DIR ${THEME_TEMP_DIR}
+  GetTempFileName $THEME_TEMP_DIR
   Delete "$THEME_TEMP_DIR"  ; The above macro creates the file
   !insertmacro ZIPDLL_EXTRACT "$TACKED_ON_FILE" "$THEME_TEMP_DIR" <ALL>
 
@@ -770,6 +779,25 @@ DoneTorrentRegistration:
   !insertmacro checkExtensionHandled ".anx" ${SecRegisterAnx}
   !insertmacro checkExtensionHandled ".xvid" ${SecRegisterXvid}
   !insertmacro checkExtensionHandled ".3ivx" ${SecRegisterXvid}
+FunctionEnd
+
+Function iHeartMiroInstall
+  !insertmacro MUI_HEADER_TEXT "Install I Heart Miro?" "Go to ihearmiro.org to install the iHeartMiro firefox extension."
+  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "iHeartMiro-installer-page.ini"
+FunctionEnd
+
+Function iHeartMiroInstallLeave
+;  !insertmacro MUI_INSTALLOPTIONS_READ $R0 "iHeartMiro-installer-page.ini" "Settings" "State"
+;  IntCmp $R0 1 InstallHeart
+;    SectionGetFlags ${SecIHeartMiro} $0
+;    IntOp $0 $0 & ~${SF_SELECTED}
+;    SectionSetFlags ${SecIHeartMiro} $0
+;    Return
+;  InstallHeart:
+;    SectionGetFlags ${SecIHeartMiro} $0
+;    IntOp $0 $0 | ${SF_SELECTED}
+;    SectionSetFlags ${SecIHeartMiro} $0
+;    Return
 FunctionEnd
 
 Section -Post
