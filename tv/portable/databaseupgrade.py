@@ -21,13 +21,12 @@ NOTE: For really old versions (before the schema.py module, see
 olddatabaseupgrade.py)
 """
 
-import schema
-import util
+from miro import schema
+from miro import util
 import types
 from urlparse import urlparse
-from storedatabase import SavableObject
-import config
-import prefs
+from miro import config
+from miro import prefs
 
 class DatabaseTooNewError(Exception):
     """Error that we raise when we see a database that is newer than the

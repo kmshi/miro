@@ -18,10 +18,10 @@
 from xpcom import components
 import traceback
 import sys
-import config
-import prefs
+from miro import config
+from miro import prefs
 
-from frontend_implementation import urlcallbacks
+from miro.frontend_implementation import urlcallbacks
 
 nsIContentPolicy = components.interfaces.nsIContentPolicy
 

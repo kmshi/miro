@@ -57,10 +57,9 @@ Frontend requirements:
     them.  
     """
 
-import app
-import eventloop
-from gtcache import gettext as _
-import frontends.html
+from miro import app
+from miro import eventloop
+from miro.gtcache import gettext as _
 
 class DialogButton(object):
     def __init__(self, text):

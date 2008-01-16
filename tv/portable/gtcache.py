@@ -19,9 +19,9 @@
 
 import gettext as _gt
 import locale
-import config
-import prefs
-import platformutils
+from miro import config
+from miro import prefs
+from miro import platformutils
 import os
 
 _gtcache = None

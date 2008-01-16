@@ -30,14 +30,14 @@ import errno
 import select
 import heapq
 import Queue
-import util
+from miro import util
 import logging
-import trapcall
-import signals
+from miro import trapcall
+from miro import signals
 
-from clock import clock
+from miro.clock import clock
 
-import util
+from miro import util
 
 cumulative = {}
 

@@ -31,7 +31,7 @@ import string
 import urllib
 import socket
 import logging
-import filetypes
+from miro import filetypes
 import tempfile
 import threading
 import traceback
@@ -191,7 +191,7 @@ def makeDummySocketPair():
     return first, second
 
 def getTorrentInfoHash(path):
-    import libtorrent as lt
+    import miro.libtorrent as lt
     f = open(path, 'rb')
     try:
         data = f.read()
@@ -565,3 +565,16 @@ def getFirstVideoEnclosure(entry):
             return enclosure
     return None
 
+def import_last(module_name):
+    """Handles runtime importing when you want to import the last module in
+    a list of modules.  
+
+    The difference between this function and __import__ is if you do
+    __import__('foo.bar.baz') it will return the foo package.  If you use
+    import_last, it will return baz.
+    """
+    components = module_name.split('.')
+    mod = __import__(module_name)
+    for comp in components[1:]:
+        mod = getattr(mod, comp)
+    return mod

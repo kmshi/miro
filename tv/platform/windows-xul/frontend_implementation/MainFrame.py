@@ -15,12 +15,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import app
+from miro import app
 import os
 from xpcom import components
-from util import quoteJS
-from frontend_implementation.VideoDisplay import VideoDisplay
-from frontend_implementation import urlcallbacks
+from miro.util import quoteJS
+from miro.frontend_implementation.VideoDisplay import VideoDisplay
+from miro.frontend_implementation import urlcallbacks
 
 ###############################################################################
 #### Main window                                                           ####

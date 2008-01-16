@@ -18,9 +18,9 @@
 import os
 
 import gtk
-import app
+from miro import app
 import gobject
-import platformutils
+from miro import platformutils
 import logging
 
 class MainWindowChanger(object):

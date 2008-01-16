@@ -18,10 +18,10 @@
 """Functions to assist in seting up the DTV mozilla environment."""
 
 import os
-import config
-import prefs
+from miro import config
+from miro import prefs
 import gtkmozembed
-from frontend_implementation.gtk_queue import gtkAsyncMethod
+from miro.frontend_implementation.gtk_queue import gtkAsyncMethod
 
 def createProfileDirectory():
     """Create the mozilla profile directory, if needed."""

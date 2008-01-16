@@ -20,7 +20,7 @@ except NameError:
 #from modulegraph.util import imp_find_module
 import modulegraph
 from modulegraph import Alias
-from util import imp_find_module
+from miro.util import imp_find_module
 
 __all__ = [
     'find_modules', 'parse_mf_results'

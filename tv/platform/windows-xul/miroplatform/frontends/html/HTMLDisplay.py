@@ -18,20 +18,20 @@
 import threading
 import socket
 import re
-import xhtmltools
+from miro import xhtmltools
 import time
 import errno
 import os
 
-import app
-import config
-import download_utils
+from miro import app
+from miro import config
+from miro import download_utils
 import tempfile
 import os
-import platformutils
-import prefs
-from frontends.html.displaybase import Display
-from frontend_implementation import urlcallbacks
+from miro import platformutils
+from miro import prefs
+from miro.frontends.html.displaybase import Display
+from miro.frontend_implementation import urlcallbacks
 
 tempdir = os.path.join(tempfile.gettempdir(), config.get(prefs.SHORT_APP_NAME))
 

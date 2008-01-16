@@ -15,9 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-from download_utils import parseURL
-from frontends.html import dialogs
-import eventloop
+from miro.download_utils import parseURL
+from miro.frontends.html import dialogs
+from miro import eventloop
 
 def formatAuthString(auth):
     return "%s %s" % (auth.getAuthScheme(), auth.getAuthToken())

@@ -6,16 +6,16 @@ import traceback
 from copy import copy
 from StringIO import StringIO
 
-from clock import clock
+from miro.clock import clock
 import os
 
-from download_utils import cleanFilename
-import app
-import download_utils
-import database
-from frontends.html import dialogs
-import httpclient
-import util
+from miro.download_utils import cleanFilename
+from miro import app
+from miro import download_utils
+from miro import database
+from miro.frontends.html import dialogs
+from miro import httpclient
+from miro import util
 from framework import EventLoopTest, DemocracyTestCase, HadToStopEventLoop
 
 class TestingConnectionHandler(httpclient.ConnectionHandler):

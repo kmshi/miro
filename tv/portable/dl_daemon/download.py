@@ -9,25 +9,25 @@ from threading import RLock, Event, Thread
 import traceback
 from copy import copy
 
-import libtorrent as lt
-from clock import clock
-from download_utils import cleanFilename, nextFreeFilename, checkFilenameExtension, filterDirectoryName
-from download_utils import filenameFromURL, getFileURLPath
-import eventloop
-import httpclient
+import miro.libtorrent as lt
+from miro.clock import clock
+from miro.download_utils import cleanFilename, nextFreeFilename, checkFilenameExtension, filterDirectoryName
+from miro.download_utils import filenameFromURL, getFileURLPath
+from miro import eventloop
+from miro import httpclient
 import datetime
 import logging
-import fileutil
+from miro import fileutil
 
-import config
-import prefs
+from miro import config
+from miro import prefs
 from sha import sha
 
-from dl_daemon import command, daemon
+from miro.dl_daemon import command, daemon
 from datetime import timedelta
-from util import checkF, checkU, stringify
+from miro.util import checkF, checkU, stringify
 
-import platformutils
+from miro import platformutils
 import string
 
 chatter = True

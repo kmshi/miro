@@ -19,7 +19,7 @@
 main thread.
 """
 
-from frontend_implementation.gtk_queue import gtkAsyncMethod
+from miro.frontend_implementation.gtk_queue import gtkAsyncMethod
 
 @gtkAsyncMethod
 def inMainThread(function, args=None, kwargs=None):

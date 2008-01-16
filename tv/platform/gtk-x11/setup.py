@@ -106,14 +106,18 @@ frontend_implementation_dir = os.path.join(platform_dir,
         'frontend_implementation')
 debian_package_dir = os.path.join(platform_dir, 'debian_package')
 
-sys.path[0:0] = ['%s/platform/%s' % (root_dir, 'gtk-x11'), '%s/platform' % root_dir, '%s/portable' % root_dir]
+sys.path.insert(0, root_dir)
+# when we install the portable modules, they will be in the miro package, but
+# at this point, they are in a package named "portable", so let's hack it
+import portable
+sys.modules['miro'] = portable
 
-import template_compiler
-import setup_portable
+from miro import template_compiler
+from miro import setup_portable
 template_compiler.compileAllTemplates(root_dir)
 
 # little hack get the version from the current app.config.template
-import util
+from miro import util
 app_config = os.path.join(resource_dir, 'app.config.template')
 appVersion = util.readSimpleConfigFile(app_config)['appVersion']
 

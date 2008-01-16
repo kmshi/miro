@@ -24,10 +24,10 @@ Miro modules.
 
 import logging
 
-import app
-import config
-import httpclient
-import prefs
+from miro import app
+from miro import config
+from miro import httpclient
+from miro import prefs
 
 sendingCrashReport = 0
 
@@ -61,5 +61,5 @@ def sendBugReport(report, description, send_database):
         postFiles = {"databasebackup": {"filename":"databasebackup.zip", "mimetype":"application/octet-stream", "handle":open(backupfile, "rb")}}
     else:
         postFiles = None
-    app.controller.sendingCrashReport += 1
+    sendingCrashReport += 1
     httpclient.grabURL("http://participatoryculture.org/bogondeflector/index.php", callback, errback, method="POST", postVariables = postVars, postFiles = postFiles)

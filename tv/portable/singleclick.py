@@ -27,26 +27,26 @@ democracy is already running.  They should arange for addVideo or addTorrent
 to be called in the existing democracy process.
 """
 
-from gtcache import gettext as _
+from miro.gtcache import gettext as _
 import os
 import logging
 import urllib
 
-from util import getTorrentInfoHash
-import app
-from frontends.html import dialogs
-import download_utils
-import item
-import feed
-import filetypes
-import folder
-import httpclient
-import views
-import platformutils
-import subscription
-import util
-import config
-import prefs
+from miro.util import getTorrentInfoHash
+from miro import app
+from miro.frontends.html import dialogs
+from miro import download_utils
+from miro import item
+from miro import feed
+from miro import filetypes
+from miro import folder
+from miro import httpclient
+from miro import views
+from miro import platformutils
+from miro import subscription
+from miro import util
+from miro import config
+from miro import prefs
 from string import Template
 
 _commandLineArgs = []

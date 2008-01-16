@@ -16,15 +16,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 import os
-import util
-import config
+from miro import util
+from miro import config
 import _winreg
 import cPickle
 import string
-import prefs
+from miro import prefs
 import tempfile
 import ctypes
-import resources
+from miro import resources
 
 import proxyfind
 

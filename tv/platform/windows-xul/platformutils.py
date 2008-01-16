@@ -22,15 +22,15 @@
 
 import ctypes
 import _winreg
-import config
-import prefs
+from miro import config
+from miro import prefs
 import os
 import logging
-import resources
+from miro import resources
 import subprocess
 import sys
 import urllib
-from util import (returnsUnicode, returnsBinary, checkU, checkB, call_command,
+from miro.util import (returnsUnicode, returnsBinary, checkU, checkB, call_command,
         AutoflushingStream)
 
 localeInitialized = False

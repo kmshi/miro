@@ -16,30 +16,30 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 from base64 import b64encode
-from gtcache import gettext as _
+from miro.gtcache import gettext as _
 from threading import RLock
 import os
 import re
 import shutil
 
-from database import DDBObject, defaultDatabase
-from dl_daemon import daemon, command
-from download_utils import nextFreeFilename, getFileURLPath, filterDirectoryName
-from util import getTorrentInfoHash, returnsUnicode, checkU, returnsFilename, unicodify, checkF, stringify
-from platformutils import FilenameType
-import app
-import config
-import httpclient
-import indexes
-import prefs
+from miro.database import DDBObject, defaultDatabase
+from miro.dl_daemon import daemon, command
+from miro.download_utils import nextFreeFilename, getFileURLPath, filterDirectoryName
+from miro.util import getTorrentInfoHash, returnsUnicode, checkU, returnsFilename, unicodify, checkF, stringify
+from miro.platformutils import FilenameType
+from miro import app
+from miro import config
+from miro import httpclient
+from miro import indexes
+from miro import prefs
 import random
-import views
-import platformutils
-import flashscraper
+from miro import views
+from miro import platformutils
+from miro import flashscraper
 import logging
 import traceback
-import templatehelper
-import fileutil
+from miro import templatehelper
+from miro import fileutil
 
 # a hash of download ids that the server knows about.
 _downloads = {}

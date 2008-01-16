@@ -25,34 +25,34 @@ import re
 import threading
 import traceback
 
-from clock import clock
-from frontends.html import dialogs
-from gtcache import gettext as _
-from miroplatform.frontends.html.HTMLDisplay import HTMLDisplay
-import app
-import autodler
-import config
-import database
-import download_utils
-import eventloop
-import feed
-import folder
-import guide
-import indexes
-import item
+from miro.clock import clock
+from miro.frontends.html import dialogs
+from miro.gtcache import gettext as _
+from miro.miroplatform.frontends.html.HTMLDisplay import HTMLDisplay
+from miro import app
+from miro import autodler
+from miro import config
+from miro import database
+from miro import download_utils
+from miro import eventloop
+from miro import feed
+from miro import folder
+from miro import guide
+from miro import indexes
+from miro import item
 import logging
-import platformutils
-import playlist
-import prefs
-import signals
-import singleclick
-import sorts
-import subscription
-import tabs
-import template
-import util
-import views
-import xhtmltools
+from miro import platformutils
+from miro import playlist
+from miro import prefs
+from miro import signals
+from miro import singleclick
+from miro import sorts
+from miro import subscription
+from miro import tabs
+from miro import template
+from miro import util
+from miro import views
+from miro import xhtmltools
 
 class TemplateDisplay(HTMLDisplay):
     """TemplateDisplay: a HTML-template-driven right-hand display panel."""

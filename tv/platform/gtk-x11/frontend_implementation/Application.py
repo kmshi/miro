@@ -18,15 +18,15 @@
 import gtk
 
 import threading
-from frontend_implementation.gtk_queue import queue, gtkAsyncMethod
-from frontends.html.main import HTMLApplication
-from miroplatform import mozsetup, options
-import app
-import gtcache
-import config
-import prefs
+from miro.frontend_implementation.gtk_queue import queue, gtkAsyncMethod
+from miro.frontends.html.main import HTMLApplication
+from miro.miroplatform import mozsetup, options
+from miro import app
+from miro import gtcache
+from miro import config
+from miro import prefs
 import gtk.glade
-import platformutils
+from miro import platformutils
 
 ###############################################################################
 #### Application object                                                    ####

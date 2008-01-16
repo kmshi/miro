@@ -20,14 +20,14 @@ import signal
 import os
 import statvfs
 import threading
-import config
-import prefs
+from miro import config
+from miro import prefs
 import logging
 import locale
 import urllib
 import sys
 import time
-from util import returnsUnicode, returnsBinary, checkU, checkB, call_command
+from miro.util import returnsUnicode, returnsBinary, checkU, checkB, call_command
 
 FilenameType = str
 
@@ -255,20 +255,13 @@ def launchDownloadDaemon(oldpid, env):
         killProcess(oldpid)
 
     environ = os.environ.copy()
+    environ.update(env)
     import miro
     miroPath = os.path.dirname(miro.__file__)
     dlDaemonPath = os.path.join(miroPath, 'dl_daemon')
-    privatePath = os.path.join(dlDaemonPath, 'private')
-
-    pythonPath = environ.get('PYTHONPATH', '').split(':')
-    pythonPath[0:0] = [privatePath, miroPath]
-    environ['PYTHONPATH'] = ':'.join(pythonPath)
-
-    environ.update(env)
 
     # run the Miro_Downloader script
     script = os.path.join(dlDaemonPath,  'Democracy_Downloader.py')
-
     os.spawnlpe(os.P_NOWAIT, "python", "python", script, environ)
 
 def exit(returnCode):

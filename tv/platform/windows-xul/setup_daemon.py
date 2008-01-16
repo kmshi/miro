@@ -38,7 +38,7 @@ sys.path[0:0] = [
 ]
 root = os.path.normpath(root)
 
-import util
+from miro import util
 
 ext_modules=[
         core_setup.libtorrent_ext,

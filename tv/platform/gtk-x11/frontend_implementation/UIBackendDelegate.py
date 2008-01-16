@@ -22,24 +22,24 @@ import gobject
 import gtk
 import threading
 import traceback
-import app
-from frontends.html import dialogs
-from gtcache import gettext as _
-from gtcache import ngettext
+from miro import app
+from miro.frontends.html import dialogs
+from miro.gtcache import gettext as _
+from miro.gtcache import ngettext
 import re
 import MainFrame
-import resources
-import feed
-import util
-import views
-import indexes
+from miro import resources
+from miro import feed
+from miro import util
+from miro import views
+from miro import indexes
 import logging
 
-import config
-import prefs
-from frontend import *
-from frontend_implementation.gtk_queue import gtkAsyncMethod
-import platformutils
+from miro import config
+from miro import prefs
+from miro.frontend import *
+from miro.frontend_implementation.gtk_queue import gtkAsyncMethod
+from miro import platformutils
 
 ###############################################################################
 #### 'Delegate' objects for asynchronously asking the user questions       ####

@@ -16,17 +16,17 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 import sys
-import app
+from miro import app
 import time
-import resources
-import config
-import prefs
+from miro import resources
+from miro import config
+from miro import prefs
 import os
-import searchengines
-import views
-from platformutils import _getLocale as getLocale
-from frontends.html.main import HTMLApplication
-from miroplatform.frontends.html import HTMLDisplay
+from miro import searchengines
+from miro import views
+from miro.platformutils import _getLocale as getLocale
+from miro.frontends.html.main import HTMLApplication
+from miro.miroplatform.frontends.html import HTMLDisplay
 import migrateappname
 
 ###############################################################################

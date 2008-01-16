@@ -17,7 +17,7 @@
 
 import os
 import shutil
-import resources
+from miro import resources
 import gconf
 
 def upgrade():

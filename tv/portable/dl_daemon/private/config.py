@@ -1,6 +1,6 @@
 from threading import Event, Lock
-import prefs
-import platformcfg
+from miro import prefs
+from miro import platformcfg
 
 _data = {}
 _dataLock = Lock()

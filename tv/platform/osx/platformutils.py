@@ -29,9 +29,9 @@ from objc import NO, YES, nil
 from Foundation import *
 from AppKit import *
 
-import prefs
-import config
-from util import returnsUnicode, returnsBinary, checkU, checkB
+from miro import prefs
+from miro import config
+from miro.util import returnsUnicode, returnsBinary, checkU, checkB
 
 FilenameType = str
 

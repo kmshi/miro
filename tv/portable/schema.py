@@ -38,7 +38,7 @@ import time
 import logging
 from types import NoneType
 from fasttypes import LinkedList
-from platformutils import FilenameType
+from miro.platformutils import FilenameType
 
 class ValidationError(Exception):
     """Error thrown when we try to save invalid data."""
@@ -242,18 +242,18 @@ class ObjectSchema(object):
     """
     pass
 
-from database import DDBObject
-from downloader import RemoteDownloader, HTTPAuthPassword
-from feed import Feed, FeedImpl, RSSFeedImpl, RSSMultiFeedImpl, ScraperFeedImpl
-from feed import SearchFeedImpl, DirectoryWatchFeedImpl, DirectoryFeedImpl, SearchDownloadsFeedImpl
-from feed import ManualFeedImpl, SingleFeedImpl
-from folder import ChannelFolder, PlaylistFolder
-from guide import ChannelGuide
-from item import Item, FileItem
-from iconcache import IconCache
-from playlist import SavedPlaylist
-from tabs import TabOrder
-from theme import ThemeHistory
+from miro.database import DDBObject
+from miro.downloader import RemoteDownloader, HTTPAuthPassword
+from miro.feed import Feed, FeedImpl, RSSFeedImpl, RSSMultiFeedImpl, ScraperFeedImpl
+from miro.feed import SearchFeedImpl, DirectoryWatchFeedImpl, DirectoryFeedImpl, SearchDownloadsFeedImpl
+from miro.feed import ManualFeedImpl, SingleFeedImpl
+from miro.folder import ChannelFolder, PlaylistFolder
+from miro.guide import ChannelGuide
+from miro.item import Item, FileItem
+from miro.iconcache import IconCache
+from miro.playlist import SavedPlaylist
+from miro.tabs import TabOrder
+from miro.theme import ThemeHistory
 
 class DDBObjectSchema(ObjectSchema):
     klass = DDBObject

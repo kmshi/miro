@@ -17,17 +17,17 @@
 
 import os
 import threading
-import httpclient
+from miro import httpclient
 from fasttypes import LinkedList
-from eventloop import asIdle, addIdle, addTimeout
-from download_utils import nextFreeFilename, getFileURLPath
-from util import unicodify, call_command
-from platformutils import unicodeToFilename
-import config
-import prefs
+from miro.eventloop import asIdle, addIdle, addTimeout
+from miro.download_utils import nextFreeFilename, getFileURLPath
+from miro.util import unicodify, call_command
+from miro.platformutils import unicodeToFilename
+from miro import config
+from miro import prefs
 import time
 import random
-import imageresize
+from miro import imageresize
 
 RUNNING_MAX = 3
     

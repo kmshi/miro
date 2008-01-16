@@ -108,8 +108,8 @@ from distutils.extension import Extension
 from distutils.cmd import Command
 from distutils.errors import DistutilsFileError
 
-import util
-import template_compiler
+from miro import util
+from miro import template_compiler
 
 # =============================================================================
 # Utility function used to extract stuff from the binary kit

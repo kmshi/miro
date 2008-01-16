@@ -1,4 +1,4 @@
-from dl_daemon import command
+from miro.dl_daemon import command
 import os
 import cPickle
 import socket
@@ -6,15 +6,15 @@ import traceback
 from time import sleep
 from struct import pack, unpack, calcsize
 import tempfile
-import config
-import prefs
-import eventloop
-import util
+from miro import config
+from miro import prefs
+from miro import eventloop
+from miro import util
 import logging
-import platformutils
-import signals
-import trapcall
-from httpclient import ConnectionHandler
+from miro import platformutils
+from miro import signals
+from miro import trapcall
+from miro.httpclient import ConnectionHandler
 
 SIZE_OF_INT = calcsize("I")
 

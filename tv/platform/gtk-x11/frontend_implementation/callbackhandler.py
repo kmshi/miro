@@ -17,34 +17,33 @@
 
 """Frontend callback handler.  Responsible for handling all GUI actions."""
 
-import app
+from miro import app
 import gobject
 import gtk
 import gtk.gdk
 import gtk.keysyms
 import os
 import shutil
-import frontend
-import config
-import prefs
-import resources
+from miro import config
+from miro import prefs
+from miro import resources
 import MainFrame
-import singleclick
-import eventloop
+from miro import singleclick
+from miro import eventloop
 import math
-import folder
-import playlist
-import platformutils
-import startup
+from miro import folder
+from miro import playlist
+from miro import platformutils
+from miro import startup
 import logging
-import feed
-import views
-import database
-from menubar import menubar
-from frontends.html import keyboard
+from miro import feed
+from miro import views
+from miro import database
+from miro.menubar import menubar
+from miro.frontends.html import keyboard
 
 from gtk_queue import gtkAsyncMethod
-from gtcache import gettext as _
+from miro.gtcache import gettext as _
  
 def AttachBoolean (dialog, widget, descriptor, sensitive_widget = None):
     def BoolChanged (widget):

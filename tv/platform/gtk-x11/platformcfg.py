@@ -16,10 +16,10 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 import os
-import prefs
+from miro import prefs
 import gconf
 import threading
-import resources
+from miro import resources
 
 client = gconf.client_get_default()
 gconf_lock = threading.RLock()

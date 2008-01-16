@@ -18,7 +18,7 @@
 """miroplatform.frontends.html.threading -- call a method in the Cocoa thread.
 """
 
-import platformutils
+from miro import platformutils
 
 def inMainThread(function, args=None, kwargs=None):
     if args is None:

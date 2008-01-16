@@ -17,7 +17,7 @@
 
 "Menu strings"
 
-from gtcache import gettext as _
+from miro.gtcache import gettext as _
 
 REMOVE = _("_Remove...")
 REMOVE_PLAYLIST = _("_Remove Playlist...")

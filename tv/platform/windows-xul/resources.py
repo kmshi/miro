@@ -20,8 +20,8 @@ import os, sys
 import re
 import urllib
 
-import config
-import prefs
+from miro import config
+from miro import prefs
 
 # Strategy: ask the directory service for
 # NS_XPCOM_CURRENT_PROCESS_DIR, the directory "associated with this

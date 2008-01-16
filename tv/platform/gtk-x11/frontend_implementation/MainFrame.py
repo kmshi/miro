@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import app
+from miro import app
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -23,22 +23,22 @@ import gobject
 import gtk.glade
 import sets
 import gconf
-import platformutils
-import menubar
-from gtcache import gettext as _
+from miro import platformutils
+from miro import menubar
+from miro.gtcache import gettext as _
 
-import resources
-from frontend import *
-from frontend_implementation import UIBackendDelegate
-from frontend_implementation.gtk_queue import gtkAsyncMethod, gtkSyncMethod
-from frontend_implementation.VideoDisplay import VideoDisplay
-from frontend_implementation.callbackhandler import CallbackHandler
-from frontend_implementation.mainwindowchanger import MainWindowChanger
-from frontend_implementation import trayicon
-from miroplatform.frontends.html.HTMLDisplay import HTMLDisplay
-from platformcfg import gconf_lock
-import config
-import prefs
+from miro import resources
+from miro.frontend import *
+from miro.frontend_implementation import UIBackendDelegate
+from miro.frontend_implementation.gtk_queue import gtkAsyncMethod, gtkSyncMethod
+from miro.frontend_implementation.VideoDisplay import VideoDisplay
+from miro.frontend_implementation.callbackhandler import CallbackHandler
+from miro.frontend_implementation.mainwindowchanger import MainWindowChanger
+from miro.frontend_implementation import trayicon
+from miro.miroplatform.frontends.html.HTMLDisplay import HTMLDisplay
+from miro.platformcfg import gconf_lock
+from miro import config
+from miro import prefs
 import logging
 
 # Extent the ShortCut class to include a GTKString() function
@@ -159,7 +159,9 @@ class MainFrame:
         self.playable = False
         self.videoLoaded = False
 
-        import views, util, indexes
+        from miro import views
+        from miro import util
+        from miro import indexes
         engines = []
         for engine in views.searchEngines:
             engines.append((engine.name, engine.title))

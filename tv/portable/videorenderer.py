@@ -17,7 +17,7 @@
 
 """videorenderer.py -- Base class for video renderers.  """
 
-import util
+from miro import util
 
 class VideoRenderer:
     """VideoRenderer renderer base class."""

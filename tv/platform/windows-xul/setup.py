@@ -242,7 +242,7 @@ ext_modules = [
     #Extension("template", [os.path.join(root, 'portable', 'template.pyx')]),
 ]
 
-import template_compiler
+from miro import template_compiler
 
 def fillTemplate(templatepath, outpath, xml=False, **vars):
     s = open(templatepath, 'rt').read()

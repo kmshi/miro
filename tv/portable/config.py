@@ -19,11 +19,10 @@ from threading import RLock
 import os
 import traceback
 
-import util
-import prefs
-import resources
-import eventloop
-import platformcfg
+from miro import util
+from miro import prefs
+from miro import resources
+from miro import platformcfg
 import urllib
 import logging
 
@@ -137,6 +136,7 @@ def __checkValidity():
         load()
 
 def __notifyListeners(key, value):
+    from miro import eventloop
     for callback in __callbacks:
         eventloop.addIdle(callback, 'config callback: %s' % callback,
                 args=(key,value))

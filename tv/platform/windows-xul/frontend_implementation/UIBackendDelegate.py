@@ -17,22 +17,22 @@
 
 import os
 import logging
-import resources
+from miro import resources
 import webbrowser
 import _winreg
 import traceback
-from gtcache import gettext as _
+from miro.gtcache import gettext as _
 from urlparse import urlparse
 
-import prefs
-import config
-from frontends.html import dialogs
-import feed
-import app
+from miro import prefs
+from miro import config
+from miro.frontends.html import dialogs
+from miro import feed
+from miro import app
 import clipboard
 import urlcallbacks
-import util
-import platformutils
+from miro import util
+from miro import platformutils
 
 currentId = 1
 def nextDialogId():

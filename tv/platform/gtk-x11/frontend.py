@@ -16,8 +16,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 import os
-import config
-import prefs
+from miro import config
+from miro import prefs
 # Switch to a dummy frontend in the case we're running tests and
 # DISPLAY isn't set
 try:

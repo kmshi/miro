@@ -15,21 +15,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import frontend
-import app
-import config
+from miro import app
+from miro import config
 import gobject
 import gtk
 import gtkmozembed
-import prefs
+from miro import prefs
 import tempfile
 from xml.sax.saxutils import escape
-from MozillaBrowser import MozillaBrowser
-from frontends.html.displaybase import Display
-from frontend_implementation.gtk_queue import gtkAsyncMethod
-from util import quoteJS
-import platformutils
-from util import checkU
+from miro.MozillaBrowser import MozillaBrowser
+from miro.frontends.html.displaybase import Display
+from miro.frontend_implementation.gtk_queue import gtkAsyncMethod
+from miro.util import quoteJS
+from miro import platformutils
+from miro.util import checkU
 
 import os
 import re

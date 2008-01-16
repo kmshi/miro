@@ -15,13 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import util
-import platformcfg
+from miro import util
+from miro import platformcfg
 import os
 import os.path
-import resources
-import config
-import prefs
+from miro import resources
+from miro import config
+from miro import prefs
 import _winreg
 from xpcom import components
 

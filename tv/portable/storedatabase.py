@@ -46,21 +46,21 @@ import os
 import traceback
 import shutil
 
-import config
-import database
-import databaseupgrade
-import prefs
-import util
-import schema as schema_mod
-import eventloop
-import app
-from frontends.html import dialogs
+from miro import config
+from miro import database
+from miro import databaseupgrade
+from miro import prefs
+from miro import util
+from miro import schema as schema_mod
+from miro import eventloop
+from miro import app
+from miro.frontends.html import dialogs
 import logging
 from zipfile import ZipFile
 import tempfile
 from random import randrange, seed
 import os.path
-import platformutils
+from miro import platformutils
 
 try:
     import bsddb.db
@@ -72,9 +72,9 @@ try:
 except ImportError:
     import sqlite3 as sql
 
-from gtcache import gettext as _
+from miro.gtcache import gettext as _
 
-from clock import clock
+from miro.clock import clock
 
 # FILEMAGIC should be the first portion of the database file.  After that the
 # file will contain pickle data

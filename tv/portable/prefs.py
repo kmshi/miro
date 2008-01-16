@@ -16,7 +16,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 import os
-import util
+from miro import util
 
 class Pref:
     def __init__(self, **kwds):

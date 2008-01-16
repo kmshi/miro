@@ -18,10 +18,10 @@
 import objc
 import Foundation
 
-import prefs
-import config
+from miro import prefs
+from miro import config
 
-from gtcache import gettext as _
+from miro.gtcache import gettext as _
 
 ###############################################################################
 

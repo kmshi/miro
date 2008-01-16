@@ -15,19 +15,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import views
-import indexes
+from miro import views
+from miro import indexes
 import re
-import template
-from util import getSingletonDDBObject, checkU, returnsUnicode
-from database import DDBObject
-from xhtmltools import urlencode
-from templatehelper import quoteattr, escape
+from miro import template
+from miro.util import getSingletonDDBObject, checkU, returnsUnicode
+from miro.database import DDBObject
+from miro.xhtmltools import urlencode
+from miro.templatehelper import quoteattr, escape
 from xml.dom.minidom import parse
-import resources
+from miro import resources
 import os
-import config
-import prefs
+from miro import config
+from miro import prefs
 import logging
 
 class SearchEngine(DDBObject):

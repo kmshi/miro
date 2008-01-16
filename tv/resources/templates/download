@@ -12,12 +12,12 @@
 <t:include filename="settings.js" />
 
     <t:execOnLoad><![CDATA[
-import config
-import prefs
-import platformutils
-import util
-import downloader
-from gtcache import gettext as _
+from miro import config
+from miro import prefs
+from miro import platformutils
+from miro import util
+from miro import downloader
+from miro.gtcache import gettext as _
 
 def getFreeSpace():
     bytes = platformutils.getAvailableBytesForMovies()

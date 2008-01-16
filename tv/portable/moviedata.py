@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-from eventloop import asIdle
+from miro.eventloop import asIdle
 import os.path
 import re
 import subprocess
@@ -24,14 +24,14 @@ import traceback
 import threading
 import Queue
 
-import app
-import eventloop
+from miro import app
+from miro import eventloop
 import logging
-import config
-import platformutils
-import prefs
-import signals
-import util
+from miro import config
+from miro import platformutils
+from miro import prefs
+from miro import signals
+from miro import util
 
 MOVIE_DATA_UTIL_TIMEOUT = 60
 # Time in seconds that we wait for the utility to execute.  If it goes longer

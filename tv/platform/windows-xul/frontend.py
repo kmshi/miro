@@ -19,8 +19,8 @@
 # Note: these can't be in just any order; there is some subtlety in the
 # initialization order, so take care.
 
-from frontend_implementation.Application import Application
-from frontend_implementation.UIBackendDelegate import UIBackendDelegate
-from frontend_implementation.MainFrame import MainFrame
-from frontend_implementation.VideoDisplay import VideoDisplay, PlaybackController
-import frontend_implementation.startup as startup
+from miro.frontend_implementation.Application import Application
+from miro.frontend_implementation.UIBackendDelegate import UIBackendDelegate
+from miro.frontend_implementation.MainFrame import MainFrame
+from miro.frontend_implementation.VideoDisplay import VideoDisplay, PlaybackController
+from miro import frontend_implementation.startup as startup
