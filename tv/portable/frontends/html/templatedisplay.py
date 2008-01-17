@@ -927,7 +927,7 @@ class TemplateActionHandler:
         app.controller.selection.selectItem(area, view, int(id), shift, ctrl)
 
     def handleContextMenuSelect(self, id, area, viewName):
-        from frontends.html import contextmenu
+        from miro.frontends.html import contextmenu
         try:
             obj = app.db.getObjectByID(int(id))
         except:

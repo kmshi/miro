@@ -248,7 +248,7 @@ def formatSizeForUser(bytes, zeroString="", withDecimals=True, kbOnly=False):
     """Format an int containing the number of bytes into a string suitable for
     printing out to the user.  zeroString is the string to use if bytes == 0.
     """
-    from gtcache import gettext as _
+    from miro.gtcache import gettext as _
     if bytes > (1 << 30) and not kbOnly:
         value = (bytes / (1024.0 * 1024.0 * 1024.0))
         if withDecimals:

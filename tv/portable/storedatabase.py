@@ -132,7 +132,7 @@ class ConverterBase(object):
     def __init__(self, objectSchemas=None):
         """Contruct a converter.  object schemas is a list of ObjectSchema
         objects to use.  If none is given (the default), the schemas will be
-        taken from schema.objectSchemas.
+        taken from miro.schema.objectSchemas.
         """
 
         if objectSchemas is None:
@@ -599,7 +599,7 @@ class LiveStorageBDB:
             exit(28)
 
     def dumpDatabase(self, db):
-        from download_utils import nextFreeFilename
+        from miro.download_utils import nextFreeFilename
         output = open (nextFreeFilename (os.path.join (config.get(prefs.SUPPORT_DIRECTORY), "database-dump.xml")), 'w')
         global indentation
         indentation = 0
@@ -992,7 +992,7 @@ class LiveStorage:
     );""")
 
     def dumpDatabase(self, db):
-        from download_utils import nextFreeFilename
+        from miro.download_utils import nextFreeFilename
         output = open (nextFreeFilename (os.path.join (config.get(prefs.SUPPORT_DIRECTORY), "database-dump.xml")), 'w')
         global indentation
         indentation = 0

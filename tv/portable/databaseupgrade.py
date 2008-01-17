@@ -542,7 +542,7 @@ def upgrade40(objectList):
 
 # Turns all strings in data structure to unicode, used by upgrade 41 and 47
 def unicodify(d):
-    from feedparser import FeedParserDict
+    from miro.feedparser import FeedParserDict
     from types import StringType
     if isinstance(d, FeedParserDict):
         for key in d.keys():

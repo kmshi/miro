@@ -187,7 +187,7 @@ class SearchChannelDialog(Dialog):
         import views
         import indexes
         import util
-        from feed import RSSFeedImpl, ScraperFeedImpl
+        from miro.feed import RSSFeedImpl, ScraperFeedImpl
         self.term = term
         self.style = style
         self.location = location
@@ -218,9 +218,9 @@ class SearchChannelDialog(Dialog):
                 (BUTTON_CREATE_CHANNEL, BUTTON_CANCEL))
 
     def getURL(self):
-        from xhtmltools import urlencode
+        from miro.xhtmltools import urlencode
         import searchengines
-        from database import defaultDatabase
+        from miro.database import defaultDatabase
 
         term = self.term
         location = self.location

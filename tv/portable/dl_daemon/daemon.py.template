@@ -169,7 +169,7 @@ class DownloaderDaemon(Daemon):
         self.shutdown = True
         eventloop.quit()
         logging.warning ("downloader: connection closed -- quitting")
-        from dl_daemon import download
+        from miro.dl_daemon import download
         download.shutDown()
         import threading
         for thread in threading.enumerate():

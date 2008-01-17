@@ -35,7 +35,7 @@ try:
     import eventloop
     import config
     import frontends.html
-    from frontends.html import dialogs, keyboard
+    from miro.frontends.html import dialogs, keyboard
     import folder
     import playlist
     import prefs
@@ -47,10 +47,10 @@ try:
     import feed
     import database
     from miro.platform.frontends.html import HTMLDisplay
-    from frontend_implementation.UIBackendDelegate import UIBackendDelegate
-    from frontend_implementation import MainFrame
-    from eventloop import asUrgent, asIdle
-    from platformutils import getLongPathName
+    from miro.frontend_implementation.UIBackendDelegate import UIBackendDelegate
+    from miro.frontend_implementation import MainFrame
+    from miro.eventloop import asUrgent, asIdle
+    from miro.platformutils import getLongPathName
     import searchengines
     import views
     import moviedata
