@@ -33,7 +33,7 @@ from miro import indexes
 from miro import prefs
 import random
 from miro import views
-from miro import platform
+from miro.platform.utils import samefile, FilenameType, unicodeToFilename
 from miro import flashscraper
 import logging
 import traceback
@@ -303,7 +303,7 @@ class RemoteDownloader(DDBObject):
         parent = os.path.normpath(parent)
         moviesDir = config.get(prefs.MOVIES_DIRECTORY)
         if (os.path.exists(parent) and os.path.exists(moviesDir) and
-            not platform.utils.samefile(parent, moviesDir) and
+            not samefile(parent, moviesDir) and
             len(os.listdir(parent)) == 0):
             try:
                 os.rmdir(parent)
@@ -490,7 +490,7 @@ URL was %s""" % self.url
     @returnsFilename
     def getFilename(self):
         self.confirmDBThread()
-        return self.status.get('filename', platform.utils.FilenameType(''))
+        return self.status.get('filename', FilenameType(''))
 
     def onRestore(self):
         self.deleteFiles = True
@@ -643,7 +643,7 @@ def getDownloader(item):
     if existing:
         return existing
     url = item.getURL()
-    channelName = platform.utils.unicodeToFilename(item.getChannelTitle(True))
+    channelName = unicodeToFilename(item.getChannelTitle(True))
     if not channelName:
         channelName = None
     if url.startswith(u'file://'):

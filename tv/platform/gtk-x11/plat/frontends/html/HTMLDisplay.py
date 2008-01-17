@@ -27,7 +27,7 @@ from miro.MozillaBrowser import MozillaBrowser
 from miro.frontends.html.displaybase import Display
 from miro.frontend_implementation.gtk_queue import gtkAsyncMethod
 from miro.util import quoteJS, checkU
-from miro import platform
+from miro.platform.utils import confirmMainThread
 
 import os
 import re
@@ -99,7 +99,7 @@ class HTMLDisplay(Display):
         return self is other
 
     def onSelected_private(self, frame):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         Display.onSelected_private (self, frame)
         self.impl.load_html (self)
         for deferment in self.deferred:
@@ -109,7 +109,7 @@ class HTMLDisplay(Display):
         self.deferred = []
 
     def getWidget(self, area = None):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         self.impl = getImpl (area)
         return self.impl.widget
 
@@ -135,7 +135,7 @@ class HTMLDisplayImpl:
         display will be rendered at, which might reduce flicker when the
         display is installed."""
 
-        platform.utils.confirmMainThread()
+        confirmMainThread()
 
         self.initialLoadFinished = False
         self.execQueue = []
@@ -155,7 +155,7 @@ class HTMLDisplayImpl:
 
     def load_html(self, display):
 
-        platform.utils.confirmMainThread()
+        confirmMainThread()
 
         self.in_load_html = True
         self.initialLoadFinished = False
@@ -187,7 +187,7 @@ class HTMLDisplayImpl:
         self.widget.load_url(url)
 
     def loadFinished(self, widget):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
 
         if self.in_load_html:
             return
@@ -298,11 +298,11 @@ class HTMLDisplayImpl:
         return retval
 
     def onBrowserDestroy(self, widget):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         self.widgetDestroyed = True
 
     def onUnrealize (self, widget):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         for (key, value) in _impls.items():
             if value is self:
                 del _impls[key]

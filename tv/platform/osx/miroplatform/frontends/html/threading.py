@@ -18,11 +18,11 @@
 """miro.platform.frontends.html.threading -- call a method in the Cocoa thread.
 """
 
-from miro import platform
+from miro.platform.utils import callOnMainThread
 
 def inMainThread(function, args=None, kwargs=None):
     if args is None:
         args = ()
     if kwargs is None:
         kwargs = {}
-    platform.utils.callOnMainThread(function, *args, **kwargs)
+    callOnMainThread(function, *args, **kwargs)

@@ -41,7 +41,6 @@ from miro import iconcache
 from miro import indexes
 from miro import item
 from miro import moviedata
-from miro import platform
 from miro import playlist
 from miro import selection
 from miro import signals
@@ -51,11 +50,12 @@ from miro import views
 # Something needs to import this outside of Pyrex. Might as well be controller
 from miro import templatehelper
 from miro import databasehelper
+from miro.platform.utils import setupLogging, exit, osFilenameToFilenameType
 
 # Run the application. Call this, not start(), on platforms where we
 # are responsible for the event loop.
 def main():
-    platform.utils.setupLogging()
+    setupLogging()
     util.setupLogging()
     app.db = database.defaultDatabase
     app.delegate = frontend.UIBackendDelegate()
@@ -426,7 +426,7 @@ Are you sure you want to stop watching these %s directories?""") % len(feeds)
 
         except:
             signals.system.failedExn("while shutting down")
-            platform.utils.exit(1)
+            exit(1)
 
     ### Handling events received from the OS (via our base class) ###
 
@@ -487,7 +487,7 @@ Are you sure you want to stop watching these %s directories?""") % len(feeds)
                 continue
             if url.startswith(u"file://"):
                 filename = download_utils.getFileURLPath(url)
-                filename = platform.utils.osFilenameToFilenameType(filename)
+                filename = osFilenameToFilenameType(filename)
                 eventloop.addIdle (singleclick.openFile,
                     "Open Dropped file", args=(filename,))
             elif url.startswith(u"http:") or url.startswith(u"https:"):

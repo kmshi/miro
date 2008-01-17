@@ -23,11 +23,11 @@ import gobject
 import gtk.glade
 import sets
 import gconf
-from miro import platform
 from miro import menubar
 from miro.gtcache import gettext as _
 
 from miro.platform import resources
+from miro.platform.utils import confirmMainThread
 from miro.frontend_implementation import UIBackendDelegate
 from miro.frontend_implementation.gtk_queue import gtkAsyncMethod, gtkSyncMethod
 from miro.frontend_implementation.VideoDisplay import VideoDisplay
@@ -172,7 +172,7 @@ class MainFrame:
     @gtkAsyncMethod
     def _gtkInit(self, engines, default_engine):
         # Create the widget tree, and remember important widgets
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         self.widgetTree = WidgetTree(resources.path('miro.glade'), 'main-window', 'miro')
         self.displayBoxes = {
             self.mainDisplay : self.widgetTree['main-box'],
@@ -284,7 +284,7 @@ class MainFrame:
         self.widgetTree['main-window'].show_all()
 
     def configureEvent(self, widget, event):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         (x, y) = self.widgetTree['main-window'].get_position ()
         (width, height) = self.widgetTree['main-window'].get_size()
         setInt ("width", width)
@@ -294,7 +294,7 @@ class MainFrame:
         return False
 
     def stateEvent (self, widget, event):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         maximized = (event.new_window_state & gtk.gdk.WINDOW_STATE_MAXIMIZED) != 0
         setBool ("maximized", maximized)
 
@@ -342,7 +342,7 @@ class MainFrame:
     def selectDisplay(self, newDisplay, area):
         """Install the provided 'newDisplay' in the requested area"""
 
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         if area == self.collectionDisplay:
             print "TODO: Collection Display not implemented on gtk/x11"
             return
@@ -377,12 +377,12 @@ class MainFrame:
 
     @gtkSyncMethod
     def getDisplay(self, area):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         return self.selectedDisplays.get(area)
 
     @gtkAsyncMethod
     def about(self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         if (self.aboutWidget is None):
             self.aboutWidget = gtk.AboutDialog()
             self.aboutWidget.set_name(config.get(prefs.SHORT_APP_NAME))

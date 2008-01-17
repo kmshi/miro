@@ -27,7 +27,7 @@ from miro import gtcache
 from miro import config
 from miro import prefs
 import gtk.glade
-from miro import platform
+from miro.platform.utils import setMainThread
 
 ###############################################################################
 #### Application object                                                    ####
@@ -40,7 +40,7 @@ class Application(HTMLApplication):
         gtk.glade.textdomain("miro")
 
         queue.main_thread = threading.currentThread()
-        platform.utils.setMainThread()
+        setMainThread()
         gtk.gdk.threads_init()
         if options.themeName is not None:
             config.load(options.themeName)

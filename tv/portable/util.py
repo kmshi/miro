@@ -215,10 +215,8 @@ class ExponentialBackoffTracker:
 
 # Gather movie files on the disk. Used by the startup dialog.
 def gatherVideos(path, progressCallback):
-    from miro import item
     from miro import prefs
     from miro import config
-    from miro import platform
     keepGoing = True
     parsed = 0
     found = list()

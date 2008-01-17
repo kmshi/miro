@@ -33,7 +33,7 @@ from miro import eventloop
 import math
 from miro import folder
 from miro import playlist
-from miro import platform
+from miro.platform.utils import confirmMainThread, makeURLSafe, filenameToUnicode
 from miro import startup
 import logging
 from miro import feed
@@ -122,7 +122,7 @@ def SetupDirList (widgetTree, toggleRenderer):
 
     @eventloop.asIdle
     def addFeed (filename):
-        feed.Feed (u"dtv:directoryfeed:%s" % (platform.utils.makeURLSafe(filename),))
+        feed.Feed (u"dtv:directoryfeed:%s" % (makeURLSafe(filename),))
 
     @eventloop.asIdle
     def toggleFeed (id):
@@ -195,7 +195,7 @@ class Mediator:
             iter = self.model.iter_next (iter)
         if iter is None:
             iter = self.model.append(None)
-        self.model.set (iter, 0, id, 1, platform.utils.filenameToUnicode (dir), 2, visible)
+        self.model.set (iter, 0, id, 1, filenameToUnicode (dir), 2, visible)
 
     @gtkAsyncMethod
     def removeDirectory (self, id):
@@ -251,7 +251,7 @@ class CallbackHandler(object):
         self.mainApp = app.controller
 
     def actionGroups (self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         actionGroups = {}
         actionGroups["VideoSelected"] = gtk.ActionGroup("VideoSelected")
         actionGroups["VideosSelected"] = gtk.ActionGroup("VideosSelected")
@@ -338,7 +338,7 @@ class CallbackHandler(object):
         return actionGroups
 
     def on_main_delete(self, *args):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         app.controller.quit()
         return True
 
@@ -381,7 +381,7 @@ class CallbackHandler(object):
         scale.buttonsDown.add(event.button)
 
     def on_video_time_scale_button_release_event(self, scale, event):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         # we want to remove the button from the buttonsDown set, but we can't
         # yet, because we haven't run the default signal handler yet, which
         # will emit the value-changed signal.  So we use use idle_add, to

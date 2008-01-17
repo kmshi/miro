@@ -60,7 +60,7 @@ from zipfile import ZipFile
 import tempfile
 from random import randrange, seed
 import os.path
-from miro import platform
+from miro.platform.utils import exit
 
 try:
     import bsddb.db
@@ -596,7 +596,7 @@ class LiveStorageBDB:
             if end - start > 0.05 and util.chatter:
                 logging.timing ("Database load slow: %.3f", end - start)
         except bsddb.db.DBNoSpaceError:
-            platform.utils.exit(28)
+            exit(28)
 
     def dumpDatabase(self, db):
         from download_utils import nextFreeFilename

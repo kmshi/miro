@@ -20,7 +20,7 @@ import os
 import gtk
 from miro import app
 import gobject
-from miro import platform
+from miro.platform.utils import confirmMainThread
 import logging
 
 class MainWindowChanger(object):
@@ -48,7 +48,7 @@ class MainWindowChanger(object):
     VIDEO = 3
 
     def __init__(self, widgetTree, mainFrame, initialState):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         self.widgetTree = widgetTree
         self.mainFrame = mainFrame
         self.currentState = None
@@ -63,14 +63,14 @@ class MainWindowChanger(object):
         self.changeState(initialState)
 
     def createCursor(self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         pixmap = gtk.gdk.Pixmap(None, 1, 1, 1)
         color = gtk.gdk.Color()
         self.empty_cursor = gtk.gdk.Cursor(pixmap, pixmap, color, color, 0, 0)
 
     def updatePlayPauseButton(self):
         """Update the play/pause button to have the correct image."""
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         playPauseImage = self.widgetTree['play-pause-image']
         if app.controller.videoDisplay.isPlaying:
             pixbuf = playPauseImage.render_icon(gtk.STOCK_MEDIA_PAUSE, 
@@ -85,7 +85,7 @@ class MainWindowChanger(object):
         playPauseImage.set_from_pixbuf(pixbuf)
 
     def updateFullScreenButton(self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         fullscreenImage = self.widgetTree['fullscreen-image']
         try:
             if self.isFullScreen and self.currentState == self.VIDEO:
@@ -103,7 +103,7 @@ class MainWindowChanger(object):
         playing a video.
         """
 
-        platform.utils.confirmMainThread()
+        confirmMainThread()
 
         videoWidgets = ['play-pause-button',
             'next-button', 'previous-button', 'fullscreen-button',
@@ -115,7 +115,7 @@ class MainWindowChanger(object):
 
     def updateState (self):
         # Handle fullscreen
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         try:
             fullscreen = (self.isFullScreen and self.currentState == self.VIDEO)
             activeRenderer = app.controller.videoDisplay.activeRenderer
@@ -181,14 +181,14 @@ class MainWindowChanger(object):
             logging.warn("Display updated before video display was created")
 
     def enablePointerTracking(self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         self.disablePointerTracking()
         self.motionHandlerId = self.widgetTree['main-window'].connect(
                 'motion-notify-event', self.onMotion)
         self.resetTimer()
 
     def disablePointerTracking(self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         if self.timeoutId is not None:
             gobject.source_remove(self.timeoutId)
             self.timeoutId = None
@@ -197,27 +197,27 @@ class MainWindowChanger(object):
             self.motionHandlerId = None
 
     def resetTimer(self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         if self.timeoutId is not None:
             gobject.source_remove(self.timeoutId)
         self.timeoutId = gobject.timeout_add(self.hideDelay, self.onTimeout)
 
     def onTimeout(self):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         self.pointerIdle = True
         self.timeoutId = None
         self.updateState()
         return False
 
     def onMotion(self, window, event):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         self.pointerIdle = False
         self.resetTimer()
         self.updateState()
         return False
 
     def changeFullScreen (self, fullscreen):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         if (self.isFullScreen == fullscreen):
             return
         if fullscreen:
@@ -232,7 +232,7 @@ class MainWindowChanger(object):
         self.updateState()
 
     def changeState(self, newState):
-        platform.utils.confirmMainThread()
+        confirmMainThread()
         if newState == self.currentState:
             return
         self.currentState = newState

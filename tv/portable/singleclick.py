@@ -42,12 +42,12 @@ from miro import filetypes
 from miro import folder
 from miro import httpclient
 from miro import views
-from miro import platform
 from miro import subscription
 from miro import util
 from miro import config
 from miro import prefs
 from string import Template
+from miro.platform.utils import samefile, filenameToUnicode
 
 _commandLineArgs = []
 commandLineVideoIds = None
@@ -65,7 +65,7 @@ def addVideo(path, single = False):
         itemFilename = i.getFilename()
         if (itemFilename != '' and 
                 os.path.exists(itemFilename) and
-                platform.utils.samefile(itemFilename, path)):
+                samefile(itemFilename, path)):
             print "Not adding duplicate video: %s" % path.decode('ascii', 'ignore')
             commandLineVideoIds.add(i.getID())
             return
@@ -306,7 +306,7 @@ def parseCommandLineArgs(args=None):
         elif arg.startswith('democracy:'):
             addSubscriptionURL('democracy:', 'application/x-democracy', arg)
         elif arg.startswith('http:') or arg.startswith('https:'):
-            addDownload(platform.utils.filenameToUnicode(arg))
+            addDownload(filenameToUnicode(arg))
         elif os.path.exists(arg):
             ext = os.path.splitext(arg)[1].lower()
             if ext in ('.torrent', '.tor'):

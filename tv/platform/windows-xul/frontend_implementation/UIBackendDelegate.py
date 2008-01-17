@@ -32,7 +32,6 @@ from miro import app
 import clipboard
 import urlcallbacks
 from miro import util
-from miro import platformutils
 
 currentId = 1
 def nextDialogId():
