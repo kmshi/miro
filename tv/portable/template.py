@@ -29,7 +29,7 @@ from itertools import chain
 import logging
 from miro import util
 
-from miro.miroplatform.frontends.html.threading import inMainThread
+from miro.platform.frontends.html.threading import inMainThread
 
 # FIXME add support for onlyBody parameter for static templates so we
 #       don't need to strip the outer HTML
@@ -38,7 +38,7 @@ HTMLPattern = re.compile("^.*<body.*?>(.*)</body\s*>", re.S)
 
 if os.environ.has_key('DEMOCRACY_RECOMPILE_TEMPLATES'):
     import template_compiler
-    import resources
+    from miro.platform import resources
     template_compiler.setResourcePath(resources.path(''))
 
 ###############################################################################

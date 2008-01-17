@@ -2,7 +2,7 @@
 # -*- mode: python -*-
 
 # This comes first.  Seriously.
-import miro.xlibhelper as xlibhelper
+from miro.platform import xlibhelper
 if xlibhelper.XInitThreads() == 0:
     print "WARNING: XInitThreads() failed!"
 
@@ -13,7 +13,7 @@ import optparse
 import pygtk
 pygtk.require('2.0')
 
-from miro import upgrade
+from miro.platform import upgrade
 upgrade.upgrade()
 
 # Set up gettext before everything else
@@ -22,8 +22,8 @@ gtcache.init()
 
 from miro import config
 from miro import controller
-from miro.miroplatform import options
-from miro import platformutils
+from miro import platform
+from miro.platform import options
 from miro import prefs
 from miro import singleclick
 
@@ -52,7 +52,7 @@ parser.add_option('--theme', dest='theme', metavar='<theme>', help='Theme to use
 (parsed_options, args) = parser.parse_args()
 
 def startapp():
-    platformutils.initializeLocale()
+    platform.utils.initializeLocale()
     # Create miro directories in the user's home
     support_dir = config.get(prefs.SUPPORT_DIRECTORY)
     if not os.path.exists(support_dir):
@@ -100,7 +100,7 @@ elif parsed_options.profile:
 else:
     try:
         import dbus
-        import onetime
+        from miro.platform import onetime
         try:
             onetime.OneTime()
             startapp()

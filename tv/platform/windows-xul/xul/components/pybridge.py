@@ -46,7 +46,7 @@ try:
     import menubar
     import feed
     import database
-    from miroplatform.frontends.html import HTMLDisplay
+    from miro.platform.frontends.html import HTMLDisplay
     from frontend_implementation.UIBackendDelegate import UIBackendDelegate
     from frontend_implementation import MainFrame
     from eventloop import asUrgent, asIdle

@@ -15,14 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-"""miroplatform.frontends.html.threading -- call a method in the Cocoa thread.
+"""miro.platform.frontends.html.threading -- call a method in the Cocoa thread.
 """
 
-from miro import platformutils
+from miro import platform
 
 def inMainThread(function, args=None, kwargs=None):
     if args is None:
         args = ()
     if kwargs is None:
         kwargs = {}
-    platformutils.callOnMainThread(function, *args, **kwargs)
+    platform.utils.callOnMainThread(function, *args, **kwargs)

@@ -24,10 +24,10 @@ from miro import eventloop
 from miro import config
 from miro import prefs
 import os
-from miro.miroplatform import options
-from miro import resources
+from miro.platform import options
+from miro.platform import resources
 from miro.download_utils import nextFreeFilename
-from miro.platformutils import confirmMainThread
+from miro.platform.utils import confirmMainThread
 from gtk_queue import gtkSyncMethod, gtkAsyncMethod
 from miro.videorenderer import VideoRenderer
 

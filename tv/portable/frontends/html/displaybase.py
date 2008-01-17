@@ -113,7 +113,7 @@ class VideoDisplayBase (Display):
         return False
     
     def selectItem(self, anItem, renderer):
-        from frontends.html.templatedisplay import TemplateDisplay
+        from miro.frontends.html.templatedisplay import TemplateDisplay
         self.stopOnDeselect = True
         app.controller.videoInfoItem = anItem
         templ = TemplateDisplay('video-info', 'default')

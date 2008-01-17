@@ -35,13 +35,13 @@ from miro import download_utils
 from miro import eventloop
 from miro import feed
 from miro import folder
-from miro import frontend
+from miro.platform import frontend
 from miro import guide
 from miro import iconcache
 from miro import indexes
 from miro import item
 from miro import moviedata
-from miro import platformutils
+from miro import platform
 from miro import playlist
 from miro import selection
 from miro import signals
@@ -55,7 +55,7 @@ from miro import databasehelper
 # Run the application. Call this, not start(), on platforms where we
 # are responsible for the event loop.
 def main():
-    platformutils.setupLogging()
+    platform.utils.setupLogging()
     util.setupLogging()
     app.db = database.defaultDatabase
     app.delegate = frontend.UIBackendDelegate()
@@ -426,7 +426,7 @@ Are you sure you want to stop watching these %s directories?""") % len(feeds)
 
         except:
             signals.system.failedExn("while shutting down")
-            platformutils.exit(1)
+            platform.utils.exit(1)
 
     ### Handling events received from the OS (via our base class) ###
 
@@ -487,7 +487,7 @@ Are you sure you want to stop watching these %s directories?""") % len(feeds)
                 continue
             if url.startswith(u"file://"):
                 filename = download_utils.getFileURLPath(url)
-                filename = platformutils.osFilenameToFilenameType(filename)
+                filename = platform.utils.osFilenameToFilenameType(filename)
                 eventloop.addIdle (singleclick.openFile,
                     "Open Dropped file", args=(filename,))
             elif url.startswith(u"http:") or url.startswith(u"https:"):

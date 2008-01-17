@@ -26,7 +26,7 @@ from miro import searchengines
 from miro import views
 from miro.platformutils import _getLocale as getLocale
 from miro.frontends.html.main import HTMLApplication
-from miro.miroplatform.frontends.html import HTMLDisplay
+from miro.platform.frontends.html import HTMLDisplay
 import migrateappname
 
 ###############################################################################

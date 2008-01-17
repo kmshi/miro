@@ -38,7 +38,7 @@ import time
 import logging
 from types import NoneType
 from fasttypes import LinkedList
-from miro.platformutils import FilenameType
+from miro.platform.utils import FilenameType
 
 class ValidationError(Exception):
     """Error thrown when we try to save invalid data."""
@@ -205,7 +205,6 @@ class SchemaStatusContainer(SchemaSimpleContainer):
     """
 
     def validate(self, data):
-        from platformutils import FilenameType
         if FilenameType == unicode:
             binaryFields = ['metainfo','fastResumeData']
         else:

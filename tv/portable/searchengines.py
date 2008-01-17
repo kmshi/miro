@@ -24,7 +24,7 @@ from miro.database import DDBObject
 from miro.xhtmltools import urlencode
 from miro.templatehelper import quoteattr, escape
 from xml.dom.minidom import parse
-from miro import resources
+from miro.platform import resources
 import os
 from miro import config
 from miro import prefs

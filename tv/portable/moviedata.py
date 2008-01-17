@@ -28,7 +28,7 @@ from miro import app
 from miro import eventloop
 import logging
 from miro import config
-from miro import platformutils
+from miro import platform
 from miro import prefs
 from miro import signals
 from miro import util
@@ -120,7 +120,7 @@ class MovieDataUpdater:
                     # All the programs failed, maybe it's an audio file?
                     # Setting it to "" instead of None, means that we won't
                     # try to take the screenshot again.
-                    screenshot = platformutils.FilenameType("")
+                    screenshot = platform.utils.FilenameType("")
                 self.updateFinished(movieDataInfo.item, duration, screenshot)
             except:
                 if self.inShutdown:
@@ -149,7 +149,7 @@ class MovieDataUpdater:
 
     def killProcess(self, pid):
         try:
-            platformutils.killProcess(pid)
+            platform.utils.killProcess(pid)
         except:
             logging.warn("Error trying to kill the movie data process:\n%s", traceback.format_exc())
         else:

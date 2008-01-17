@@ -24,7 +24,7 @@ from miro import prefs
 import os
 import logging
 from miro.download_utils import nextFreeFilename
-from miro.platformutils import confirmMainThread
+from miro.platform.utils import confirmMainThread
 from gtk_queue import gtkAsyncMethod, gtkSyncMethod
 from miro.videorenderer import VideoRenderer
 

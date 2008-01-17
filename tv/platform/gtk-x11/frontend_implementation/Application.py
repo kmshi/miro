@@ -20,13 +20,14 @@ import gtk
 import threading
 from miro.frontend_implementation.gtk_queue import queue, gtkAsyncMethod
 from miro.frontends.html.main import HTMLApplication
-from miro.miroplatform import mozsetup, options
+from miro.platform import mozsetup
+from miro.platform import options
 from miro import app
 from miro import gtcache
 from miro import config
 from miro import prefs
 import gtk.glade
-from miro import platformutils
+from miro import platform
 
 ###############################################################################
 #### Application object                                                    ####
@@ -39,7 +40,7 @@ class Application(HTMLApplication):
         gtk.glade.textdomain("miro")
 
         queue.main_thread = threading.currentThread()
-        platformutils.setMainThread()
+        platform.utils.setMainThread()
         gtk.gdk.threads_init()
         if options.themeName is not None:
             config.load(options.themeName)

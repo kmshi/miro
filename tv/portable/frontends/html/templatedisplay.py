@@ -28,7 +28,7 @@ import traceback
 from miro.clock import clock
 from miro.frontends.html import dialogs
 from miro.gtcache import gettext as _
-from miro.miroplatform.frontends.html.HTMLDisplay import HTMLDisplay
+from miro.platform.frontends.html.HTMLDisplay import HTMLDisplay
 from miro import app
 from miro import autodler
 from miro import config
@@ -41,7 +41,7 @@ from miro import guide
 from miro import indexes
 from miro import item
 import logging
-from miro import platformutils
+from miro import platform
 from miro import playlist
 from miro import prefs
 from miro import signals
@@ -243,7 +243,7 @@ class TemplateDisplay(HTMLDisplay):
                         newFeed.blink()
             elif type == 'download':
                 for url in normalizedURLs:
-                    filename = platformutils.unicodeToFilename(url)
+                    filename = platform.utils.unicodeToFilename(url)
                     singleclick.downloadURL(filename)
             elif type == 'guide':
                 for url in normalizedURLs:
@@ -728,7 +728,7 @@ class GUIActionHandler:
     def addDownload(self, url = None):
         def doAdd(url):
             app.db.confirmDBThread()
-            singleclick.downloadURL(platformutils.unicodeToFilename(url))
+            singleclick.downloadURL(platform.utils.unicodeToFilename(url))
         self.addURL (Template(_("$shortAppName - Download Video")).substitute(shortAppName=config.get(prefs.SHORT_APP_NAME)), _("Enter the URL of the video to download"), doAdd, url)
 
     def handleDrop(self, data, type, sourcedata):

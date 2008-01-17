@@ -27,7 +27,7 @@ from miro.dl_daemon import command, daemon
 from datetime import timedelta
 from miro.util import checkF, checkU, stringify
 
-from miro import platformutils
+from miro import platform
 import string
 
 chatter = True
@@ -466,7 +466,7 @@ class BGDownloader:
             if size < 0:
                 size = 0
             preserved = config.get(prefs.PRESERVE_X_GB_FREE) * 1024 * 1024 * 1024
-            available = platformutils.getAvailableBytesForMovies() - preserved
+            available = platform.utils.getAvailableBytesForMovies() - preserved
             accept = (size <= available)
         return accept
 

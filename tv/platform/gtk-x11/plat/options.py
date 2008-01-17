@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-"""miroplatform.options -- Holds platform-specific command line options.
+"""miro.platform.options -- Holds platform-specific command line options.
 Most/all of these are set in the miro.real script.  The values here are
 hopefully sane defaults.
 """

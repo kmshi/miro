@@ -67,8 +67,9 @@ from miro import storedatabase
 # version 6 we avoid that bug, while still giving the people using version 1
 # and 2 an upgrade path that does something.
 
+
 def defaultFeedIconURL():
-    import resources
+    from miro.platform import resources
     return resources.url("images/feedicon.png")
 
 #Dummy class for removing bogus FileItem instances

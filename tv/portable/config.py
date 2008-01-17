@@ -21,8 +21,8 @@ import traceback
 
 from miro import util
 from miro import prefs
-from miro import resources
-from miro import platformcfg
+from miro.platform import config as platformcfg
+from miro.platform import resources
 import urllib
 import logging
 
@@ -54,7 +54,7 @@ def load(theme = None):
             # it with those keys) before calling load() ensures that (a)
             # the values will be available and (b) we won't get caught in
             # an infinite loop of load()s. But in general, you shouldn't
-            # call config.get() or config.set() from platformcfg.load()
+            # call config.get() or config.set() from platform.config.load()
             # unless you know exactly what you are doing, and maybe not
             # even then.
             __appConfig = util.readSimpleConfigFile(resources.path('app.config'))

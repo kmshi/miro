@@ -37,15 +37,15 @@ if hasGTK:
     # being linked to a different libxpcom than it expects.  This way
     # seems to be less bad though, so we'll use it for now.  See Bug
     # #1560.
-    import MozillaBrowser
+    from miro.platform import MozillaBrowser
 
     # Almost everything is split out into files under
     # frontend-implementation.
-    from frontend_implementation.Application import Application
-    from frontend_implementation.MainFrame import MainFrame
-    from frontend_implementation.UIBackendDelegate import UIBackendDelegate
-    from frontend_implementation.VideoDisplay import VideoDisplay
-    from frontend_implementation.VideoDisplay import PlaybackController
+    from miro.frontend_implementation.Application import Application
+    from miro.frontend_implementation.MainFrame import MainFrame
+    from miro.frontend_implementation.UIBackendDelegate import UIBackendDelegate
+    from miro.frontend_implementation.VideoDisplay import VideoDisplay
+    from miro.frontend_implementation.VideoDisplay import PlaybackController
 else:
     class Application:
         pass

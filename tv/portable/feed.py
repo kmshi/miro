@@ -45,11 +45,11 @@ from miro import eventloop
 from miro import filters
 from miro import folder
 from miro import prefs
-from miro import resources
+from miro.platform import resources
 from miro import downloader
 from miro.util import (returnsUnicode, unicodify, chatter, checkU, checkF, quoteUnicodeURL, getFirstVideoEnclosure)
 from miro.fileutil import miro_listdir
-from miro.platformutils import filenameToUnicode, makeURLSafe, unmakeURLSafe, osFilenameToFilenameType, FilenameType
+from miro.platform.utils import filenameToUnicode, makeURLSafe, unmakeURLSafe, osFilenameToFilenameType, FilenameType
 from miro import filetypes
 from miro import item as itemmod
 from miro import views

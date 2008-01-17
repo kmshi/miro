@@ -26,9 +26,8 @@ from xml.sax.saxutils import escape
 from miro.MozillaBrowser import MozillaBrowser
 from miro.frontends.html.displaybase import Display
 from miro.frontend_implementation.gtk_queue import gtkAsyncMethod
-from miro.util import quoteJS
-from miro import platformutils
-from miro.util import checkU
+from miro.util import quoteJS, checkU
+from miro import platform
 
 import os
 import re
@@ -100,7 +99,7 @@ class HTMLDisplay(Display):
         return self is other
 
     def onSelected_private(self, frame):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
         Display.onSelected_private (self, frame)
         self.impl.load_html (self)
         for deferment in self.deferred:
@@ -110,7 +109,7 @@ class HTMLDisplay(Display):
         self.deferred = []
 
     def getWidget(self, area = None):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
         self.impl = getImpl (area)
         return self.impl.widget
 
@@ -136,7 +135,7 @@ class HTMLDisplayImpl:
         display will be rendered at, which might reduce flicker when the
         display is installed."""
 
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
 
         self.initialLoadFinished = False
         self.execQueue = []
@@ -156,7 +155,7 @@ class HTMLDisplayImpl:
 
     def load_html(self, display):
 
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
 
         self.in_load_html = True
         self.initialLoadFinished = False
@@ -188,7 +187,7 @@ class HTMLDisplayImpl:
         self.widget.load_url(url)
 
     def loadFinished(self, widget):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
 
         if self.in_load_html:
             return
@@ -299,11 +298,11 @@ class HTMLDisplayImpl:
         return retval
 
     def onBrowserDestroy(self, widget):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
         self.widgetDestroyed = True
 
     def onUnrealize (self, widget):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
         for (key, value) in _impls.items():
             if value is self:
                 del _impls[key]

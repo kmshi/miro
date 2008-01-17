@@ -22,7 +22,7 @@ from fasttypes import LinkedList
 from miro.eventloop import asIdle, addIdle, addTimeout
 from miro.download_utils import nextFreeFilename, getFileURLPath
 from miro.util import unicodify, call_command
-from miro.platformutils import unicodeToFilename
+from miro.platform.utils import unicodeToFilename
 from miro import config
 from miro import prefs
 import time

@@ -25,7 +25,7 @@ import sys
 import logging
 from gtk_queue import gtkAsyncMethod, gtkSyncMethod
 from miro.frontends.html.displaybase import VideoDisplayBase
-from miro.platformcfg import gconf_lock
+from miro.platform.config import gconf_lock
 from miro.playbackcontroller import PlaybackControllerBase
 
 from threading import Event

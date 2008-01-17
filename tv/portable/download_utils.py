@@ -24,7 +24,7 @@ from miro import filetypes
 from miro import util
 
 from miro.util import checkF, checkU, returnsFilename
-from miro.platformutils import unicodeToFilename, unmakeURLSafe
+from miro.platform.utils import unicodeToFilename, unmakeURLSafe
 
 URIPattern = re.compile(r'^([^?]*/)?([^/?]*)/*(\?(.*))?$')
 # filename limits this is mostly for windows where we have a 255 character

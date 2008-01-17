@@ -26,14 +26,14 @@ import os
 import shutil
 from miro import config
 from miro import prefs
-from miro import resources
+from miro.platform import resources
 import MainFrame
 from miro import singleclick
 from miro import eventloop
 import math
 from miro import folder
 from miro import playlist
-from miro import platformutils
+from miro import platform
 from miro import startup
 import logging
 from miro import feed
@@ -122,7 +122,7 @@ def SetupDirList (widgetTree, toggleRenderer):
 
     @eventloop.asIdle
     def addFeed (filename):
-        feed.Feed (u"dtv:directoryfeed:%s" % (platformutils.makeURLSafe(filename),))
+        feed.Feed (u"dtv:directoryfeed:%s" % (platform.utils.makeURLSafe(filename),))
 
     @eventloop.asIdle
     def toggleFeed (id):
@@ -195,7 +195,7 @@ class Mediator:
             iter = self.model.iter_next (iter)
         if iter is None:
             iter = self.model.append(None)
-        self.model.set (iter, 0, id, 1, platformutils.filenameToUnicode (dir), 2, visible)
+        self.model.set (iter, 0, id, 1, platform.utils.filenameToUnicode (dir), 2, visible)
 
     @gtkAsyncMethod
     def removeDirectory (self, id):
@@ -251,7 +251,7 @@ class CallbackHandler(object):
         self.mainApp = app.controller
 
     def actionGroups (self):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
         actionGroups = {}
         actionGroups["VideoSelected"] = gtk.ActionGroup("VideoSelected")
         actionGroups["VideosSelected"] = gtk.ActionGroup("VideosSelected")
@@ -338,7 +338,7 @@ class CallbackHandler(object):
         return actionGroups
 
     def on_main_delete(self, *args):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
         app.controller.quit()
         return True
 
@@ -381,7 +381,7 @@ class CallbackHandler(object):
         scale.buttonsDown.add(event.button)
 
     def on_video_time_scale_button_release_event(self, scale, event):
-        platformutils.confirmMainThread()
+        platform.utils.confirmMainThread()
         # we want to remove the button from the buttonsDown set, but we can't
         # yet, because we haven't run the default signal handler yet, which
         # will emit the value-changed signal.  So we use use idle_add, to

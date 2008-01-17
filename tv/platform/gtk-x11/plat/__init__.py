@@ -15,3 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
+"""Platform package.  This holds platform-specific code.
+
+By default we import the config and utils modules.  This means if you import
+platform, you can safely access platform.utils.
+"""
+
+from miro.platform import utils

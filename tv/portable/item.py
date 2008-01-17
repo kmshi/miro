@@ -22,7 +22,7 @@ from math import ceil
 from miro.xhtmltools import unescape,xhtmlify
 from xml.sax.saxutils import unescape
 from miro.util import checkU, returnsUnicode, checkF, returnsFilename, quoteUnicodeURL, stringify, getFirstVideoEnclosure
-from miro.platformutils import FilenameType
+from miro.platform.utils import FilenameType
 import locale
 import os
 import os.path
@@ -48,7 +48,7 @@ from miro.frontends.html import dialogs
 from miro import eventloop
 from miro import filters
 from miro import prefs
-from miro import resources
+from miro.platform import resources
 from miro import views
 import random
 from miro import indexes
@@ -57,7 +57,7 @@ from miro import adscraper
 from miro import autodler
 from miro import moviedata
 import logging
-from miro import platformutils
+from miro import platform
 from miro import filetypes
 from miro import searchengines
 from miro import fileutil
@@ -771,7 +771,7 @@ folder will be deleted.""")
         if self.downloader is None:
             self.downloader = downloader.getDownloader(self)
         if self.downloader is not None:
-            self.downloader.setChannelName (platformutils.unicodeToFilename(self.getChannelTitle(True)))
+            self.downloader.setChannelName (platform.utils.unicodeToFilename(self.getChannelTitle(True)))
             if self.downloader.isFinished():
                 self.onDownloadFinished()
             else:
@@ -1033,7 +1033,7 @@ folder will be deleted.""")
             else:
                 label = _("REVEAL LOCAL FILE")
             link = util.makeEventURL(label, linkEventURL)
-            rv.append((_('Filename:'), u"%s<BR />%s" % (platformutils.filenameToUnicode(basename), link)))
+            rv.append((_('Filename:'), u"%s<BR />%s" % (platform.utils.filenameToUnicode(basename), link)))
         return rv
 
 
@@ -1659,7 +1659,7 @@ def reconnectDownloaders():
             item.remove()
 
 def getEntryForFile(filename):
-    return FeedParserDict({'title':platformutils.filenameToUnicode(os.path.basename(filename)),
+    return FeedParserDict({'title':platform.utils.filenameToUnicode(os.path.basename(filename)),
             'enclosures':[{'url': resources.url(filename)}]})
 
 def getEntryForURL(url, contentType=None):

@@ -19,7 +19,7 @@ import os
 from miro import prefs
 import gconf
 import threading
-from miro import resources
+from miro.platform import resources
 
 client = gconf.client_get_default()
 gconf_lock = threading.RLock()

@@ -48,7 +48,7 @@ from miro import guide
 from miro import moviedata
 from miro import playlist
 from miro import prefs
-from miro import resources
+from miro.platform import resources
 from miro import signals
 from miro import tabs
 from miro import theme
