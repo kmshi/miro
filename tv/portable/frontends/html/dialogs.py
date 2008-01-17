@@ -184,9 +184,9 @@ class SearchChannelDialog(Dialog):
     ENGINE = 1
     URL = 2
     def __init__(self, term=None, style=CHANNEL, location=None):
-        import views
-        import indexes
-        import util
+        from miro import views
+        from miro import indexes
+        from miro import util
         from miro.feed import RSSFeedImpl, ScraperFeedImpl
         self.term = term
         self.style = style
@@ -219,7 +219,7 @@ class SearchChannelDialog(Dialog):
 
     def getURL(self):
         from miro.xhtmltools import urlencode
-        import searchengines
+        from miro import searchengines
         from miro.database import defaultDatabase
 
         term = self.term

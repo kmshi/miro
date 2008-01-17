@@ -126,9 +126,9 @@ class OneTime (dbus.service.Object):
 
     @dbus.service.method('org.participatoryculture.dtv.OneTimeIface')
     def HandleArgs (self, args):
-        import singleclick
-        import app
-        import eventloop
+        from miro import singleclick
+        from miro import app
+        from miro import eventloop
         for i in xrange(len(args)):
             args[i] = args[i].encode('latin1')
             if args[i].startswith('file://'):

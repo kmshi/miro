@@ -125,7 +125,7 @@ def getRequestURL(engineName, query, filterAdultContents=True, limit=50):
     if query == "LET'S TEST DTV'S CRASH REPORTER TODAY":
         someVariable = intentionallyUndefinedVariableToTestCrashReporter
     if query == "LET'S DEBUG DTV: DUMP DATABASE":
-        import database
+        from miro import database
         database.defaultDatabase.liveStorage.dumpDatabase (database.defaultDatabase)
         return u""
     if engineName == u'all':

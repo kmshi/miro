@@ -60,9 +60,9 @@ def migrateVideos(oldAppName, newAppName):
         oldDefault = os.path.join(moviesRootFolder, oldAppName)
         newDefault = os.path.join(moviesRootFolder, newAppName)
         
-        import config
-        import prefs
+        from miro import config
+        from miro import prefs
         videoDir = config.get(prefs.MOVIES_DIRECTORY)
         if videoDir == newDefault:
-            import app
+            from miro import app
             app.controller.changeMoviesDirectory(newDefault, True)

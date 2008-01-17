@@ -32,7 +32,7 @@ from miro import imageresize
 RUNNING_MAX = 3
     
 def clearOrphans():
-    import views
+    from miro import views
     knownIcons = set()
     for item in views.items:
         if item.iconCache and item.iconCache.filename:

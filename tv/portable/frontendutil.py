@@ -47,7 +47,7 @@ def sendBugReport(report, description, send_database):
     if send_database:
         try:
             logging.info("Sending entire database")
-            import database
+            from miro import database
             backupfile = database.defaultDatabase.liveStorage.backupDatabase()
         except:
             traceback.print_exc()

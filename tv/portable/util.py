@@ -155,7 +155,7 @@ def failedExn(when, **kwargs):
 def failed(when, withExn = False, details = None):
     logging.warn("util.failed is deprecated.  Use system.signals.failed\n"
             "stack:\n%s" % ''.join(traceback.format_stack()))
-    import signals
+    from miro import signals
     signals.system.failed(when, withExn, details)
 
 class AutoflushingStream:

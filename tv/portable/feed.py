@@ -781,7 +781,7 @@ class Feed(DDBObject):
 #        for item in self.items:
 #            item.signalChange(needsSave=False)
         if self.maxNew >= oldMaxNew or self.maxNew < 0:
-            import autodler
+            from miro import autodler
             autodler.autoDownloader.startDownloads()
 
     def rename(self):

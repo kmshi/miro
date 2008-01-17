@@ -498,7 +498,7 @@ def getObjects(pathname, convertOnFail):
     except BadFileFormatError:
         if convertOnFail:
             logging.info ("trying to convert database from old version")
-            import olddatabaseupgrade
+            from miro import olddatabaseupgrade
             olddatabaseupgrade.convertOldDatabase(pathname)
             objects = restoreObjectList(pathname)
             logging.info ("*** Conversion Successfull ***")
@@ -519,7 +519,7 @@ def getObjects(pathname, convertOnFail):
         else:
             raise
 
-    import databasesanity
+    from miro import databasesanity
     try:
         databasesanity.checkSanity(objects, quiet=True, 
                 reallyQuiet=(not util.chatter))

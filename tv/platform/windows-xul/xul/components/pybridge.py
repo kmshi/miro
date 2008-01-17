@@ -25,37 +25,37 @@ import traceback
 import _winreg
 
 try:
-    import platformutils
+    from miro import platformutils
     platformutils.initializeLocale()
     platformutils.setupLogging()
-    import gtcache
+    from miro import gtcache
     gtcache.init()
-    import app
-    import controller
-    import eventloop
-    import config
-    import frontends.html
+    from miro import app
+    from miro import controller
+    from miro import eventloop
+    from miro import config
+    from miro import frontends.html
     from miro.frontends.html import dialogs, keyboard
-    import folder
-    import playlist
-    import prefs
-    import platformcfg
-    import singleclick
-    import frontend
-    import util
-    import menubar
-    import feed
-    import database
+    from miro import folder
+    from miro import playlist
+    from miro import prefs
+    from miro import platformcfg
+    from miro import singleclick
+    from miro import frontend
+    from miro import util
+    from miro import menubar
+    from miro import feed
+    from miro import database
     from miro.platform.frontends.html import HTMLDisplay
     from miro.frontend_implementation.UIBackendDelegate import UIBackendDelegate
     from miro.frontend_implementation import MainFrame
     from miro.eventloop import asUrgent, asIdle
     from miro.platformutils import getLongPathName
-    import searchengines
-    import views
-    import moviedata
+    from miro import searchengines
+    from miro import views
+    from miro import moviedata
     import migrateappname
-    import signals
+    from miro import signals
     moviedata.RUNNING_MAX = 1
 except:
     errorOnImport = True

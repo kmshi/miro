@@ -51,7 +51,7 @@ def launchApplication():
     import migrateappname
     migrateappname.migrateSupport('Democracy', 'Miro')
 
-    import platformutils
+    from miro import platformutils
     platformutils.initializeLocale()
     
     from glob import glob
@@ -65,14 +65,14 @@ def launchApplication():
         if os.path.isdir(themeDir):
             theme = os.path.basename(themeDir)
 
-    import config
+    from miro import config
     config.load(theme)
 
-    import gtcache
+    from miro import gtcache
     gtcache.init()
 
-    import controller
-    import prefs
+    from miro import controller
+    from miro import prefs
 
     # Tee output off to a log file
     class AutoflushingTeeStream:
@@ -116,7 +116,7 @@ def launchDownloaderDaemon():
     sys.path[0:0] = [daemonPath, daemonPrivatePath]
     
     # Make sure we don't leak from the downloader eventloop
-    import eventloop
+    from miro import eventloop
 
     def beginLoop(loop):
         loop.pool = Foundation.NSAutoreleasePool.alloc().init()

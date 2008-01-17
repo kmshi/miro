@@ -527,7 +527,7 @@ class CallbackHandler(object):
         folder.createNewChannelFolder()
 
     def on_preference(self, event = None):
-        import autodler
+        from miro import autodler
         # get our add channel dialog
         movie_dir = config.get(prefs.MOVIES_DIRECTORY)
         widgetTree = MainFrame.WidgetTree(resources.path('miro.glade'), 'dialog-preferences', 'miro')

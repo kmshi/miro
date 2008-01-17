@@ -174,8 +174,8 @@ class CallerObject (NSObject):
 ###############################################################################
 
 def getAvailableBytesForMovies():
-    import config
-    import prefs
+    from miro import config
+    from miro import prefs
 
     pool = NSAutoreleasePool.alloc().init()
     fm = NSFileManager.defaultManager()

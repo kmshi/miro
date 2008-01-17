@@ -27,7 +27,7 @@ def findHTTPAuth(callback, host, path):
     be called with a string to use for the Authorization header or None if we
     can't find anything in the DB.
     """
-    import downloader
+    from miro import downloader
 
     auth = downloader.findHTTPAuth(host, path)
     if auth is not None:
@@ -42,7 +42,7 @@ def askForHTTPAuth(callback, url, realm, authScheme):
 
     scheme, host, port, path = parseURL(url)
     def handleLoginResponse(dialog):
-        import downloader
+        from miro import downloader
         if dialog.choice == dialogs.BUTTON_OK:
             auth = downloader.HTTPAuthPassword(dialog.username,
                     dialog.password, host, realm, path, authScheme)

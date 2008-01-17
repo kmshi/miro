@@ -369,7 +369,7 @@ class UIBackendDelegate:
         logging.warn("UIBackendDelegate.maximizeWindow() not implemented")
 
     def performStartupTasks(self, terminationCallback):
-        import startup
+        from miro import startup
         startup.performStartupTasks(terminationCallback)
         
     def openExternalURL(self, url):

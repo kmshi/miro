@@ -706,7 +706,7 @@ class bdist_xul_dumb(Command):
     # NEEDS: Very sloppy. The new file is just dropped in the source tree
     # next to the old one. This also initializes self.templateVars.
     def makeAppConfig(self):
-        import util
+        from miro import util
         revision = util.queryRevision(root)
         if revision is None:
             revision = "unknown"

@@ -142,7 +142,7 @@ class TemplateDisplay(HTMLDisplay):
             for key in argLists.keys():
                 value = argLists[key]
                 if len(value) != 1:
-                    import template_compiler
+                    from miro import template_compiler
                     raise template_compiler.TemplateError, "Multiple values of '%s' argument passed to '%s' action" % (key, url)
                 # Cast the value results back to unicode
                 try:

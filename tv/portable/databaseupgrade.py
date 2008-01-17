@@ -155,7 +155,7 @@ def upgrade11(objectList):
     return set()
 
 def upgrade12(objectList):
-    import filetypes
+    from miro import filetypes
     from datetime import datetime
     changed = set()
     for o in objectList:
@@ -356,7 +356,7 @@ def upgrade27(objectList):
     return set()
 
 def upgrade28(objectList):
-    import filetypes
+    from miro import filetypes
     objectList.sort(key=lambda o:o.savedData['id'])
     changed = set()
     items = set()
@@ -741,7 +741,7 @@ def upgrade51(objectList):
     return changed
 
 def upgrade52(objectList):
-    import filetypes
+    from miro import filetypes
     changed = set()
     removed = set()
     search_id = 0
