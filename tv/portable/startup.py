@@ -27,7 +27,6 @@ In general, frontends should do the following to handle startup.
 from miro.gtcache import gettext as _
 from string import Template
 import logging
-import platform
 import os
 import traceback
 
@@ -46,6 +45,7 @@ from miro import feed
 from miro import folder
 from miro import guide
 from miro import moviedata
+from miro import platform
 from miro import playlist
 from miro import prefs
 from miro.platform import resources

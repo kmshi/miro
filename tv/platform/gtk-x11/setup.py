@@ -98,7 +98,7 @@ compiled_templates_dir = os.path.join(portable_dir, 'compiled_templates')
 compiled_templates_unittest_dir = os.path.join(compiled_templates_dir,'unittest')
 resource_dir = os.path.join(root_dir, 'resources')
 platform_dir = os.path.join(root_dir, 'platform', 'gtk-x11')
-platform_package_dir = os.path.join(platform_dir, 'plat')
+platform_package_dir = os.path.join(platform_dir, 'platform')
 glade_dir = os.path.join(platform_dir, 'glade')
 xine_dir = os.path.join(platform_dir, 'xine')
 frontend_implementation_dir = os.path.join(platform_dir,
@@ -110,6 +110,8 @@ sys.path.insert(0, root_dir)
 # at this point, they are in a package named "portable", so let's hack it
 import portable
 sys.modules['miro'] = portable
+import platform
+sys.modules['miro'].platform = platform
 
 from miro import template_compiler
 from miro import setup_portable

@@ -28,7 +28,7 @@ from miro.database import DDBObject
 from miro import opml
 from miro import iconcache
 from miro.platform import resources
-import platform
+from miro import platform
 from miro import guide
 from miro import feed
 from miro import folder
