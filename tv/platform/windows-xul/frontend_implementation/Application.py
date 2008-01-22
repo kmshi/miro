@@ -18,16 +18,16 @@
 import sys
 from miro import app
 import time
-from miro import resources
 from miro import config
 from miro import prefs
+from miro.platform import resources
 import os
 from miro import searchengines
 from miro import views
-from miro.platformutils import _getLocale as getLocale
+from miro.platform.utils import _getLocale as getLocale
 from miro.frontends.html.main import HTMLApplication
 from miro.platform.frontends.html import HTMLDisplay
-import migrateappname
+from miro.platform import migrateappname
 
 ###############################################################################
 #### Application object                                                    ####

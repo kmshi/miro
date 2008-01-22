@@ -161,22 +161,23 @@ platform = 'windows-xul'
 
 # Find the top of the source tree and set search path
 root = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), '..', '..')
+root = os.path.normpath(os.path.abspath(root))
 platform_dir = os.path.join(root, 'platform', 'windows-xul')
 portable_dir = os.path.join(root, 'portable')
-sys.path[0:0] = [
-    platform_dir,
-    portable_dir,
-]
-root = os.path.normpath(root)
+sys.path.insert(0, root)
+# when we install the portable modules, they will be in the miro package, but
+# at this point, they are in a package named "portable", so let's hack it
+import portable
+sys.modules['miro'] = portable
 
 #### The database extension ####
-database_ext = Extension("database", 
+database_ext = Extension("miro.database", 
         sources=[os.path.join(root, 'portable', 'database.pyx')])
 
 #### The fasttypes extension ####
 
 fasttypes_ext = \
-    Extension("fasttypes", 
+    Extension("miro.fasttypes", 
         sources = [os.path.join(root, 'portable', 'fasttypes.cpp')],
         library_dirs = [BOOST_LIB_PATH],
         include_dirs = [BOOST_INCLUDE_PATH]
@@ -201,9 +202,8 @@ def fetchCpp():
 libtorrent_sources=list(fetchCpp())
 libtorrent_sources.remove(os.path.join(portable_dir, 'libtorrent\\src\\file.cpp'))
 
-print [ BOOST_LIB_PATH, OPENSSL_LIB_PATH, ZLIB_LIB_PATH]
 libtorrent_ext = Extension(
-        "libtorrent", 
+        "miro.libtorrent", 
         include_dirs = [
             os.path.join(portable_dir, 'libtorrent', 'include'),
             os.path.join(portable_dir, 'libtorrent', 'include', 'libtorrent'),
@@ -238,7 +238,7 @@ ext_modules = [
 
     # Pyrex sources.
     #Extension("vlc", [os.path.join(root, 'platform',platform, 'vlc.pyx')],libraries=["simplevlc"]),
-    Extension("sorts", [os.path.join(root, 'portable', 'sorts.pyx')]),
+    Extension("miro.sorts", [os.path.join(root, 'portable', 'sorts.pyx')]),
     #Extension("template", [os.path.join(root, 'portable', 'template.pyx')]),
 ]
 
@@ -334,8 +334,8 @@ class bdist_xul_dumb(Command):
         # Find our 'resources' tree (NEEDS)
         self.appResources = os.path.join(root, 'resources')
         # Find our various data bits (NEEDS)
-        self.xulTemplateDir = os.path.join(root, 'platform', platform,
-                                           'xul')
+        self.xulTemplateDir = os.path.join(root, 'platform', platform, 'xul')
+        self.xul_dist_dir = os.path.join(self.dist_dir, 'xulrunner', 'python')
 
     def run(self):
         self.buildMovieDataUtil()
@@ -367,11 +367,11 @@ class bdist_xul_dumb(Command):
         # Add application Python modules to search path
         # NEEDS: should compile all Python files, and add the *build*
         # directories to the path.
-        packagePaths.extend([
-                os.path.join(root, 'platform', platform),
-                os.path.join(root, 'platform'),
-                os.path.join(root, 'portable'),
-                ])
+        #packagePaths.extend([
+                #os.path.join(root, 'platform', platform),
+                #os.path.join(root, 'platform'),
+                #os.path.join(root, 'portable'),
+                #])
 
         # Add PyXPCOM's runtime scripts directory to the search path,
         # and call out a list of top-level modules (those imported by
@@ -398,17 +398,10 @@ class bdist_xul_dumb(Command):
                            "xpcom.server",
                            # This manages to escape but looks important (?)
                            "xpcom.server.enumerator",
-                           # slips through because it's only included by
-                           # platform code
-                           "frontends.html.keyboard", 
+                           # The Python initialization script.
+                           "site",
                            ]
 
-        # Add other stuff that is necessary to get a functional Python
-        # environment.
-        moduleIncludes.extend([
-                # The Python initialization script.
-                "site",
-                ])
         packageIncludes = [
             # Make sure all the codecs we need make it in. Otherwise the
             # dependency scanner isn't clever enough to find them.
@@ -474,10 +467,14 @@ class bdist_xul_dumb(Command):
         # Copy the files indicated in the manifest to create a complete
         # application package.
         log.info("creating application image")
-        imageRoot = os.path.join(self.dist_dir, 'xulrunner', 'python')
+        miro_source = os.path.join(build.build_lib, 'miro')
+        miro_dest = os.path.join(self.xul_dist_dir, 'miro')
+        shutil.copytree(miro_source, miro_dest)
         dirsCreated = set()
         for (source, dest) in manifest:
-            dest = os.path.join(imageRoot, dest)
+            if dest.startswith('miro'):
+                continue
+            dest = os.path.join(self.xul_dist_dir, dest)
             destDir = os.path.dirname(dest)
             if destDir not in dirsCreated:
                 if not os.access(destDir, os.F_OK):
@@ -519,6 +516,7 @@ class bdist_xul_dumb(Command):
         
         # Finally, build the download daemon
         self.buildDownloadDaemon(self.dist_dir)
+        self.moveDLLs()
         
     def computePythonManifest(self, path=None, scripts=[], packages=[],
                               includes=[], excludes=[]):
@@ -602,9 +600,22 @@ class bdist_xul_dumb(Command):
 
     def buildDownloadDaemon(self, baseDir):
         print "building download daemon"
-        dist_dir = os.path.join(self.dist_dir, 'xulrunner', 'python')
         os.system("%s setup_daemon.py py2exe --dist-dir %s" % 
-                (PYTHON_BINARY, dist_dir))
+                (PYTHON_BINARY, self.xul_dist_dir))
+
+    def moveDLLs(self):
+        print "moving all DLL files to %s" % self.dist_dir
+        for dll in glob(os.path.join(self.xul_dist_dir, '*.dll')):
+            basename = os.path.basename(dll)
+            if basename.lower() == 'python25.dll':
+                continue
+            dest = os.path.join(self.dist_dir, basename)
+            if not os.path.exists(dest):
+                shutil.move(dll, dest)
+            else:
+                # maybe we should check that they're the same here?
+                os.remove(dll)
+
 
     def buildMovieDataUtil(self):
         print "building movie data utility"
@@ -939,6 +950,24 @@ def copyTreeExceptSvn(src, dest, filterOut=None):
 if __name__ == "__main__":
     setup(
         ext_modules = ext_modules,
+        packages = [
+            'miro',
+            'miro.frontend_implementation',
+            'miro.dl_daemon',
+            'miro.dl_daemon.private',
+            'miro.compiled_templates',
+            'miro.frontends',
+            'miro.frontends.html',
+            'miro.platform',
+            'miro.platform.frontends',
+            'miro.platform.frontends.html',
+        ],
+        package_dir = {
+            'miro': portable_dir,
+            'miro.frontend_implementation' : os.path.join(platform_dir,
+                'frontend_implementation'),
+            'miro.platform': os.path.join(platform_dir, 'platform'),
+        },
         cmdclass = {
             'build_ext': build_ext,
             'runxul': runxul,

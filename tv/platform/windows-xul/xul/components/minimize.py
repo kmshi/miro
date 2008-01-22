@@ -100,7 +100,7 @@ WNDENUMPROC = ctypes.WINFUNCTYPE(ctypes.c_int, HWND, LPARAM)
 
 from miro import config
 from miro import prefs
-from miro import resources
+from miro.platform import resources
 
 class GUID(ctypes.Structure):
     _fields_ = [("Data1", ctypes.c_int32),

@@ -293,6 +293,12 @@ def _defaultFeeds():
             logging.warn("Could not import %s" % filepath)
         return
     logging.info("Adding default feeds")
+    import sys
+    logging.info("PATH: %s" % ':'.join(sys.path))
+    import os
+    logging.info("CWD: %s" % os.getcwd())
+
+
     if platform.system() == 'Darwin':
         defaultFeedURLs = [u'http://www.getmiro.com/screencasts/mac/mac.feed.rss']
     elif platform.system() == 'Windows':

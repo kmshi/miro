@@ -25,36 +25,34 @@ import traceback
 import _winreg
 
 try:
-    from miro import platformutils
-    platformutils.initializeLocale()
-    platformutils.setupLogging()
+    from miro.platform.utils import initializeLocale, setupLogging, getLongPathName
+    initializeLocale()
+    setupLogging()
     from miro import gtcache
     gtcache.init()
     from miro import app
     from miro import controller
     from miro import eventloop
     from miro import config
-    from miro import frontends.html
     from miro.frontends.html import dialogs, keyboard
     from miro import folder
     from miro import playlist
     from miro import prefs
-    from miro import platformcfg
     from miro import singleclick
-    from miro import frontend
+    from miro.platform import frontend
     from miro import util
     from miro import menubar
     from miro import feed
     from miro import database
+    from miro.platform.config import getSpecialFolder
     from miro.platform.frontends.html import HTMLDisplay
     from miro.frontend_implementation.UIBackendDelegate import UIBackendDelegate
     from miro.frontend_implementation import MainFrame
     from miro.eventloop import asUrgent, asIdle
-    from miro.platformutils import getLongPathName
     from miro import searchengines
     from miro import views
     from miro import moviedata
-    import migrateappname
+    from miro.platform import migrateappname
     from miro import signals
     moviedata.RUNNING_MAX = 1
 except:
@@ -202,14 +200,6 @@ def getArgumentList(commandLine):
         args = args[1:]
     return [getLongPathName(path) for path in args]
 
-# Copied from resources.py; if you change this function here, change it
-# there too.
-def appRoot():
-    klass = components.classes["@mozilla.org/file/directory_service;1"]
-    service = klass.getService(nsIProperties)
-    file = service.get("XCurProcD", nsIFile)
-    return file.path
-
 # Functions to convert menu information into XUL form
 def XULifyLabel(label):
     return label.replace(u'_',u'')
@@ -285,7 +275,7 @@ class PyBridge:
         app.controller.onShutdown()
 
     def deleteVLCCache(self):
-        appDataPath = platformcfg.getSpecialFolder("AppData")
+        appDataPath = getSpecialFolder("AppData")
         if appDataPath:
             vlcCacheDir = os.path.join(appDataPath, "PCF-VLC")
             shutil.rmtree(vlcCacheDir, ignore_errors=True)
@@ -300,7 +290,7 @@ class PyBridge:
         ]
 
         for name in tries:
-            virtualPath = platformcfg.getSpecialFolder(name)
+            virtualPath = getSpecialFolder(name)
             if virtualPath is None:
                 continue
             if path == virtualPath:
@@ -629,10 +619,10 @@ class PyBridge:
         app.controller.newDownload()
 
     def importChannels(self):
-        frontends.html.importChannels()
+        app.htmlapp.importChannels()
 
     def exportChannels(self):
-        frontends.html.exportChannels()
+        app.htmlapp.exportChannels()
 
     @asUrgent
     def addChannel(self):
@@ -675,7 +665,7 @@ class PyBridge:
         frontend.startup.cancelSearch()
 
     def getSpecialFolder(self, name):
-        return platformcfg.getSpecialFolder(name)
+        return getSpecialFolder(name)
 
     def extractFinish (self, duration, screenshot_success):
         app.controller.videoDisplay.extractFinish(duration, screenshot_success)

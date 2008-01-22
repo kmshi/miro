@@ -17,16 +17,14 @@
 
 # Democracy download daemon - background process
 
-# List of modules that we override using the versions in dl_daemon/private
-PRIVATE_MODULES = [ 'config', 'httpauth', 'resources' ]
-
 def override_modules():
     import miro
-    from miro import util
-    for mod_name in PRIVATE_MODULES:
-        full_name = 'miro.dl_daemon.private.%s' % mod_name
-        private_mod = util.import_last(full_name)
-        setattr(miro, mod_name, private_mod)
+    import miro.dl_daemon.private.config
+    import miro.dl_daemon.private.httpauth
+    import miro.dl_daemon.private.resources
+    miro.config = miro.dl_daemon.private.config
+    miro.httpauth = miro.dl_daemon.private.httpauth
+    miro.resources = miro.dl_daemon.private.resources
 
 def launch():
     # Make all output flush immediately.

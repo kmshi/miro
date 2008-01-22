@@ -17,7 +17,7 @@
 
 import os
 import logging
-from miro import resources
+from miro.platform import resources
 import webbrowser
 import _winreg
 import traceback
@@ -29,7 +29,7 @@ from miro import config
 from miro.frontends.html import dialogs
 from miro import feed
 from miro import app
-import clipboard
+from miro.platform import clipboard
 import urlcallbacks
 from miro import util
 

@@ -28,7 +28,7 @@ from miro import config
 from miro import download_utils
 import tempfile
 import os
-from miro import platformutils
+from miro.platform.utils import makeURLSafe, getLongPathName, osFilenameToFilenameType
 from miro import prefs
 from miro.frontends.html.displaybase import Display
 from miro.frontend_implementation import urlcallbacks
@@ -69,15 +69,15 @@ def initTempDir():
         os.mkdir(tempdir)
 
 def makeFileUrl(path):
-    path = platformutils.osFilenameToFilenameType(path.replace("\\", "/"))
-    return "file:///" + platformutils.makeURLSafe(path)
+    path = osFilenameToFilenameType(path.replace("\\", "/"))
+    return "file:///" + makeURLSafe(path)
 
 def compareFileUrls(url1, url2):
     if not url1.startswith("file://") or not url2.startswith("file://"):
         return False
     def normalize(url):
         path = download_utils.getFileURLPath(url)
-        return os.path.normpath(platformutils.getLongPathName(path))
+        return os.path.normpath(getLongPathName(path))
     return normalize(url1) == normalize(url2)
 
 class HTMLDisplay (Display):

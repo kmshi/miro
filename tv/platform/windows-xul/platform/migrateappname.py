@@ -16,12 +16,12 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 from miro import util
-from miro import platformcfg
+from miro.platform.config import _appDataDirectory, _baseMoviesDirectory
 import os
 import os.path
-from miro import resources
 from miro import config
 from miro import prefs
+from miro.platform import resources
 import _winreg
 from xpcom import components
 
@@ -30,7 +30,7 @@ def migrateSupport(oldAppName, newAppName):
     migratedSupport = False
     # This gets called before config is set up, so we have to cheat
     templateVars = util.readSimpleConfigFile(resources.path('app.config'))
-    appDataDir = platformcfg._appDataDirectory
+    appDataDir = _appDataDirectory
     oldSupportDir = os.path.join(appDataDir, templateVars['publisher'], oldAppName, 'Support')
     newSupportDir = os.path.join(appDataDir, templateVars['publisher'], newAppName, 'Support')
 
@@ -81,8 +81,8 @@ def migrateVideos(oldAppName, newAppName):
     pybridge = components.classes[pybridgeCID]. \
                  getService(components.interfaces.pcfIDTVPyBridge)
     if migratedSupport:
-        oldDefault = os.path.join(platformcfg._baseMoviesDirectory, oldAppName)
-        newDefault = os.path.join(platformcfg._baseMoviesDirectory, newAppName)
+        oldDefault = os.path.join(_baseMoviesDirectory, oldAppName)
+        newDefault = os.path.join(_baseMoviesDirectory, newAppName)
         videoDir = config.get(prefs.MOVIES_DIRECTORY)
         if videoDir == newDefault:
             pybridge.changeMoviesDirectory(newDefault, True)

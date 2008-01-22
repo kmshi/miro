@@ -23,4 +23,4 @@ from miro.frontend_implementation.Application import Application
 from miro.frontend_implementation.UIBackendDelegate import UIBackendDelegate
 from miro.frontend_implementation.MainFrame import MainFrame
 from miro.frontend_implementation.VideoDisplay import VideoDisplay, PlaybackController
-from miro import frontend_implementation.startup as startup
+from miro.frontend_implementation import startup

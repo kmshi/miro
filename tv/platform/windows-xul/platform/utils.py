@@ -26,7 +26,7 @@ from miro import config
 from miro import prefs
 import os
 import logging
-from miro import resources
+from miro.platform import resources
 import subprocess
 import sys
 import urllib
@@ -216,7 +216,7 @@ def resizeImage(source_path, dest_path, width, height):
     specified, or because it had a different aspect ratio, pad out the image
     with black pixels.
     """
-    convert_path = os.path.join(resources.appRoot(), '..', 'imagemagick',
+    convert_path = os.path.join(resources.appRoot(), 'imagemagick',
             'convert.exe')
     # From the "Pad Out Image" recipe at
     # http://www.imagemagick.org/Usage/thumbnails/
@@ -247,6 +247,16 @@ def launchDownloadDaemon(oldpid, env):
         os.environ[key] = value
     os.environ['DEMOCRACY_DOWNLOADER_LOG'] = \
             config.get(prefs.DOWNLOADER_LOG_PATHNAME)
+    try:
+        path = os.environ['PATH']
+    except KeyError:
+        path = []
+    else:
+        path = path.split(';')
+    cwd = os.path.abspath(os.getcwd())
+    if cwd not in path:
+        path.append(cwd)
+        os.environ['PATH'] = ';'.join(path)
     # Start the downloader.  We use the subprocess module to turn off the
     # console.  One slightly awkward thing is that the current process
     # might not have a valid stdin/stdout/stderr, so we create a pipe to

@@ -17,16 +17,16 @@
 
 import os
 from miro import util
-from miro import config
 import _winreg
 import cPickle
 import string
 from miro import prefs
 import tempfile
 import ctypes
-from miro import resources
+from miro.platform import proxyfind
+from miro.platform import resources
 
-import proxyfind
+app_config = util.readSimpleConfigFile(resources.path('app.config'))
 
 proxy_info = proxyfind.get_proxy_info()
 
@@ -73,7 +73,7 @@ if _baseMoviesDirectory is None:
     _baseMoviesDirectory = os.path.join(getSpecialFolder('My Documents'),'My Videos')
 
 def _getMoviesDirectory():
-    path = os.path.join(_baseMoviesDirectory, config.get(prefs.SHORT_APP_NAME))
+    path = os.path.join(_baseMoviesDirectory, app_config['shortAppName'])
     try:
         os.makedirs(os.path.join(path, 'Incomplete Downloads'))
     except:
@@ -158,10 +158,12 @@ def get(descriptor):
         return os.path.join(path, 'sqlitedb')
 
     elif descriptor == prefs.LOG_PATHNAME:
-        return os.path.join(tempfile.gettempdir(), ('%s.log' %config.get(prefs.SHORT_APP_NAME)))
+        return os.path.join(tempfile.gettempdir(), 
+                ('%s.log' % app_config['shortAppName']))
 
     elif descriptor == prefs.DOWNLOADER_LOG_PATHNAME:
-        return os.path.join(tempfile.gettempdir(), ('%s-downloader.log'%config.get(prefs.SHORT_APP_NAME)))
+        return os.path.join(tempfile.gettempdir(),
+            ('%s-downloader.log' % app_config['shortAppName']))
 
     elif descriptor == prefs.RUN_AT_STARTUP:
         # We use the legacy startup registry key, so legacy versions
@@ -174,7 +176,7 @@ def get(descriptor):
             try:
                 (name, val, type) = _winreg.EnumValue(folder,count)
                 count += 1
-                if (name == config.get(prefs.LONG_APP_NAME)):
+                if (name == app_config['longAppName']):
                     return True                    
             except:
                 return False
