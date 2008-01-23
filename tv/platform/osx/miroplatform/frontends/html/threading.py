@@ -1,3 +1,4 @@
+<<<<<<< .working
 # Miro - an RSS based video player application
 # Copyright (C) 2005-2007 Participatory Culture Foundation
 #
