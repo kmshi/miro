@@ -25,6 +25,7 @@ import shutil
 import threading
 import urllib
 
+<<<<<<< .working
 from miro.frontends.html import dialogs
 from miro.gtcache import gettext as _
 from miro import app
