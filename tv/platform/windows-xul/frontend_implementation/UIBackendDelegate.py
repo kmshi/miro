@@ -31,7 +31,7 @@ from miro import feed
 from miro import app
 from miro.platform import clipboard
 import urlcallbacks
-from miro import util
+from miro.trapcall import trapCall
 
 currentId = 1
 def nextDialogId():
@@ -193,7 +193,7 @@ class UIBackendDelegate:
             callback = self.openDialogs.pop(dialogID)
         except KeyError:
             return
-        util.trapCall('File dialog callback', callback, pathname)
+        trapCall('File dialog callback', callback, pathname)
 
     def handleContextMenu(self, index):
         self.currentMenuItems[index].activate()
