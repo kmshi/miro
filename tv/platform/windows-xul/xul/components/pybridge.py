@@ -143,6 +143,7 @@ def initializeProxyObjects(window):
 
 def initializeHTTPProxy():
     xulprefs = makeService("@mozilla.org/preferences-service;1",components.interfaces.nsIPrefService, False)
+    branch = xulprefs.getBranch("network.proxy.")
 
     if config.get(prefs.HTTP_PROXY_ACTIVE):                     
         branch.setIntPref("type",1)

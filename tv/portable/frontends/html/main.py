@@ -30,6 +30,7 @@ from miro import app
 from miro import autoupdate
 from miro import config
 from miro import eventloop
+from miro import iheartmiro
 from miro import frontendutil
 from miro import opml
 from miro import prefs
@@ -211,7 +212,6 @@ class HTMLApplication:
 
         app.controller.finishedStartup = True
 
-        import iheartmiro
         eventloop.addIdle(iheartmiro.checkIHeartMiroInstall, "Install iHeartMiro")
 
         logging.info ("Finished startup sequence")

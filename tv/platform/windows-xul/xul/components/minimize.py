@@ -15,11 +15,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-from xpcom import components
-from xulhelper import makeService
 import ctypes
-import logging
 from ctypes.wintypes import DWORD, HWND, HANDLE, LPCWSTR, WPARAM, LPARAM, RECT, POINT
+import logging
+
+from xpcom import components
+
+from miro.platform.xulhelper import makeService
+
 UINT = ctypes.c_uint
 WCHAR = ctypes.c_wchar
 INT = ctypes.c_int
