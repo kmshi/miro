@@ -15,8 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-from miro import app
 import os
+import logging
+
+from miro import app
 from miro import util
 from miro import config
 from miro import prefs
@@ -25,7 +27,6 @@ from miro.frontends.html.displaybase import VideoDisplayBase
 from miro.playbackcontroller import PlaybackControllerBase
 from miro.videorenderer import VideoRenderer
 
-from xpcom import components
 from threading import Lock
 import time
 
@@ -128,6 +129,8 @@ class VLCRenderer (VideoRenderer):
     """
 
     def canPlayFile(self, filename):
+        logging.warn("VLCRenderer.canPlayfile() always returns True")
+        return True
         url = util.absolutePathToFileURL(filename)
         return app.vlcRenderer.canPlayURL(url)
 

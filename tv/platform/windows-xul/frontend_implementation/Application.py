@@ -28,6 +28,8 @@ from miro.platform.utils import _getLocale as getLocale
 from miro.frontends.html.main import HTMLApplication
 from miro.platform.frontends.html import HTMLDisplay
 from miro.platform import migrateappname
+from miro.platform.xulhelper import makeService, pcfIDTVPyBridge
+import logging
 
 ###############################################################################
 #### Application object                                                    ####
@@ -43,9 +45,10 @@ class Application(HTMLApplication):
         else:
             lang = "en-US"
 
+        # FIXME: This should run in the Mozilla thread --NN
+        logging.warn("Application.Run() is creating XPCOM objects in the wrong thread!")
         from xpcom import components
-        ps_cls = components.classes["@mozilla.org/preferences-service;1"]
-        ps = ps_cls.getService(components.interfaces.nsIPrefService)
+        ps = makeService("@mozilla.org/preferences-service;1",components.interfaces.nsIPrefService,False)
         branch = ps.getBranch("general.useragent.")
         branch.setCharPref("locale", lang)
 
@@ -61,8 +64,7 @@ class Application(HTMLApplication):
         app.jsBridge.closeWindow()
 
     def finishStartupSequence(self):
-        from xpcom import components
-        pybridge = components.classes["@participatoryculture.org/dtv/pybridge;1"].getService(components.interfaces.pcfIDTVPyBridge)
+        pybridge = makeService("@participatoryculture.org/dtv/pybridge;1",pcfIDTVPyBridge,True, False)
         self.initializeSearchEngines()
         migrateappname.migrateVideos('Democracy', 'Miro')
         pybridge.updateTrayMenus()
@@ -80,26 +82,14 @@ class Application(HTMLApplication):
         # For overriding
         pass
 
-    # This is called on OS X when we are handling a click on an RSS feed
-    # button for Safari. NEEDS: add code here to register as a RSS feed
-    # reader on Windows too. Just call this function when we're launched
-    # to handle a click on a feed.
-    def addAndSelectFeed(self, url):
-        # For overriding
-        pass
-
     def onUnwatchedItemsCountChange(self, obj, id):
-        from xpcom import components
-
         HTMLApplication.onDownloadingItemsCountChange(self, obj, id)
-        pybridge = components.classes["@participatoryculture.org/dtv/pybridge;1"].getService(components.interfaces.pcfIDTVPyBridge)
+        pybridge = makeService("@participatoryculture.org/dtv/pybridge;1",pcfIDTVPyBridge, True, False)
         pybridge.updateTrayMenus()
 
     def onDownloadingItemsCountChange(self, obj, id):
-        from xpcom import components
-
         HTMLApplication.onDownloadingItemsCountChange(self, obj, id)
-        pybridge = components.classes["@participatoryculture.org/dtv/pybridge;1"].getService(components.interfaces.pcfIDTVPyBridge)
+        pybridge = makeService("@participatoryculture.org/dtv/pybridge;1",pcfIDTVPyBridge, True, False)
         pybridge.updateTrayMenus()
 
 ###############################################################################

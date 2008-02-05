@@ -15,6 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
+# This space is only for system import that we are *absolutely* sure will
+# work.  If you think an import could possible fail, put it in the
+# try...finally block below.
 from gettext import gettext as _
 from xpcom import components
 import ctypes
@@ -25,6 +28,7 @@ import traceback
 import _winreg
 
 try:
+    from miro.platform.xulhelper import makeService, makeComp, proxify
     from miro.platform.utils import initializeLocale, setupLogging, getLongPathName
     initializeLocale()
     setupLogging()
@@ -122,14 +126,6 @@ def XULDisplayedShortcut(item):
         return 1
     return len(item.shortcuts)
 
-def makeComp(clsid, iid):
-    """Helper function to get an XPCOM component"""
-    return components.classes[clsid].createInstance(iid)
-
-def makeService(clsid, iid):
-    """Helper function to get an XPCOM service"""
-    return components.classes[clsid].getService(iid)
-
 def createProxyObjects():
     """Creates the jsbridge and vlcrenderer xpcom components, then wraps them in
     a proxy object, then stores them in the frontend module.  By making them
@@ -137,42 +133,17 @@ def createProxyObjects():
     loop.
     """
 
-    proxyManager = makeComp("@mozilla.org/xpcomproxy;1",
-            components.interfaces.nsIProxyObjectManager)
-    try:
-        # XULRunner 1.8 version
-        eventQueueService = makeService("@mozilla.org/event-queue-service;1",
-            components.interfaces.nsIEventQueueService)
-        xulEventQueue = eventQueueService.getSpecialEventQueue(
-            components.interfaces.nsIEventQueueService.UI_THREAD_EVENT_QUEUE)
-    except:
-        # XULRunner 1.9 version
-        threadMan = makeService("@mozilla.org/thread-manager;1",
-                                components.interfaces.nsIThreadManager)
-        xulEventQueue = threadMan.mainThread
-    jsBridge = makeService("@participatoryculture.org/dtv/jsbridge;1",
-                               components.interfaces.pcfIDTVJSBridge)
-    app.jsBridge = proxyManager.getProxyForObject(xulEventQueue,
-          components.interfaces.pcfIDTVJSBridge, jsBridge,
-          components.interfaces.nsIProxyObjectManager.INVOKE_ASYNC |
-          components.interfaces.nsIProxyObjectManager.FORCE_PROXY_CREATION)
-
-    vlcRenderer = makeService("@participatoryculture.org/dtv/vlc-renderer;1",
-                              components.interfaces.pcfIDTVVLCRenderer)
-    app.vlcRenderer = proxyManager.getProxyForObject(xulEventQueue,
-            components.interfaces.pcfIDTVVLCRenderer, vlcRenderer, 
-            components.interfaces.nsIProxyObjectManager.INVOKE_SYNC |
-            components.interfaces.nsIProxyObjectManager.FORCE_PROXY_CREATION)
-
+    app.jsBridge = makeService("@participatoryculture.org/dtv/jsbridge;1",
+        components.interfaces.pcfIDTVJSBridge, True, False)
+    app.vlcRenderer = makeService("@participatoryculture.org/dtv/vlc-renderer;1",  components.interfaces.pcfIDTVVLCRenderer, True, False)
 
 def initializeProxyObjects(window):
     app.vlcRenderer.init(window)
     app.jsBridge.init(window)
 
 def initializeHTTPProxy():
-    klass = components.classes["@mozilla.org/preferences-service;1"]
-    xulprefs = klass.getService(components.interfaces.nsIPrefService)
-    branch = xulprefs.getBranch("network.proxy.")
+    xulprefs = makeService("@mozilla.org/preferences-service;1",components.interfaces.nsIPrefService, False)
+
     if config.get(prefs.HTTP_PROXY_ACTIVE):                     
         branch.setIntPref("type",1)
         branch.setCharPref("http", config.get(prefs.HTTP_PROXY_HOST))
@@ -185,9 +156,9 @@ def initializeHTTPProxy():
 
 def registerHttpObserver():
     observer = makeComp("@participatoryculture.org/dtv/httprequestobserver;1",
-        components.interfaces.nsIObserver)
+        components.interfaces.nsIObserver, False)
     observer_service = makeService("@mozilla.org/observer-service;1",
-            components.interfaces.nsIObserverService)
+            components.interfaces.nsIObserverService, False)
     observer_service.addObserver(observer, "http-on-modify-request", False);
         
 def getArgumentList(commandLine):
@@ -796,11 +767,10 @@ class PyBridge:
         except:
             pass
 
-    @asUrgent
     def playUnwatched(self):
         minimizer = makeService(
             "@participatoryculture.org/dtv/minimize;1",
-            components.interfaces.pcfIDTVMinimize)
+            components.interfaces.pcfIDTVMinimize, False)
         if minimizer.isMinimized():
             minimizer.minimizeOrRestore()
         app.controller.frame.mainDisplayCallback(u'action:playUnwatched')
@@ -838,7 +808,7 @@ class PyBridge:
         elif config.get(prefs.MINIMIZE_TO_TRAY):
             minimizer = makeService(
                     "@participatoryculture.org/dtv/minimize;1",
-                    components.interfaces.pcfIDTVMinimize)
+                    components.interfaces.pcfIDTVMinimize, False)
             minimizer.minimizeOrRestore()
         else:
             self.quit()
