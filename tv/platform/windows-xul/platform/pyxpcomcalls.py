@@ -19,9 +19,10 @@
 # Create and store python callbacks so we can call them from XPCOM land
 
 from xpcom import components
-from xulhelper import makeComp
-from util import random_string
-from eventloop import asIdle
+
+from miro.eventloop import asIdle
+from miro.platform.xulhelper import makeComp
+from miro.util import random_string
 
 _callbacks = {}
 

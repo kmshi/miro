@@ -25,7 +25,6 @@ from miro import prefs
 from miro.download_utils import nextFreeFilename
 from miro.frontends.html.displaybase import VideoDisplayBase
 from miro.playbackcontroller import PlaybackControllerBase
-from miro.videorenderer import VideoRenderer
 from miro.platform import pyxpcomcalls
 
 from threading import Lock
