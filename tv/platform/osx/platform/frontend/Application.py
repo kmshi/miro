@@ -126,7 +126,6 @@ class AppController (NSObject):
         
         self.openQueue = list()
         self.pausedDownloaders = list()
-        self.internalShutdown = False
         self.emergencyShutdown = False
         
     def applicationDidFinishLaunching_(self, notification):
@@ -156,7 +155,7 @@ class AppController (NSObject):
         # the correct shutdown call is made. Otherwise we cancel the current
         # shutdown process and schedule the correct one.
         result = NSTerminateNow
-        if not self.internalShutdown:
+        if not eventloop.finished():
             eventloop.addUrgentCall(lambda:self.shutdown_(nil), "Shutdowning")
             result = NSTerminateLater
         return result
@@ -314,7 +313,6 @@ class AppController (NSObject):
         app.htmlapp.exportChannels()
     
     def shutdown_(self, sender):
-        self.internalShutdown = True
         app.controller.quit()
 
     def validateMenuItem_(self, item):

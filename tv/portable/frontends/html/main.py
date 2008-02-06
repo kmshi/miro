@@ -80,7 +80,6 @@ class HTMLApplication:
         raise NotImplementedError("HTMLApplication.quitUI() not implemented")
 
     def cancelStartup(self):
-        self.quitUI()
         app.controller.shutdown()
 
     def handleStartupSuccess(self, obj):

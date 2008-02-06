@@ -413,6 +413,18 @@ def quit():
     _eventLoop.quitFlag = True
     _eventLoop.wakeup()
 
+def finished():
+    """Returns True if the eventloop is done with it's work and has quit, or
+    is about to quit.
+    """
+
+    if _eventLoop.quitFlag:
+        # call wakeup() as a precaution to make sure we really are quitting.
+        _eventLoop.wakeup() 
+        return True
+    else:
+        return False
+
 def connect(signal, callback):
     _eventLoop.connect(signal, callback)
 
