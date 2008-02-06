@@ -17,7 +17,6 @@
 
 import os
 import logging
-<<<<<<< .working
 
 from miro import app
 from miro import util
