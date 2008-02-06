@@ -32,6 +32,8 @@ from AppKit import *
 from miro import prefs
 from miro import config
 from miro.util import returnsUnicode, returnsBinary, checkU, checkB
+from miro.platform.filenames import osFilenameToFilenameType, \
+        osFilenamesToFilenameTypes, filenameTypeToOSFilename
 
 FilenameType = str
 
@@ -40,6 +42,7 @@ FilenameType = str
 from os.path import samefile
 
 localeInitialized = False
+dlTask = None
 
 ###############################################################################
 #### Helper method used to get the free space on the disk where downloaded ####
@@ -47,9 +50,6 @@ localeInitialized = False
 ###############################################################################
 
 def getAvailableBytesForMovies():
-    from miro import config
-    from miro import prefs
-
     pool = NSAutoreleasePool.alloc().init()
     fm = NSFileManager.defaultManager()
     info = fm.fileSystemAttributesAtPath_(config.get(prefs.MOVIES_DIRECTORY))
@@ -155,21 +155,6 @@ def unmakeURLSafe(string):
     # unquote the byte string
     checkU (string)
     return urllib.unquote(string.encode('ascii'))
-
-# Takes filename given by Python or the PyObjC bridge and turn it into a FilenameType
-@returnsBinary
-def osFilenameToFilenameType(filename):
-    if isinstance(filename, str):
-        return FilenameType(filename)
-    return filename.encode('utf-8','replace')
-
-# Takes an array of filenames given by the OS and turn them into a FilenameTypes
-def osFilenamesToFilenameTypes(filenames):
-    return [osFilenameToFilenameType(filename) for filename in filenames]
-
-# Takes a FilenameType and turn it into something the PyObjC bridge accepts.
-def filenameTypeToOSFilename(filename):
-    return filename.decode('utf-8')
 
 # Load the image at source_path, resize it to [width, height] (and use
 # letterboxing if source and destination ratio are different) and save it to

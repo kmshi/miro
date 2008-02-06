@@ -77,7 +77,7 @@ class HTMLApplication:
         """Stop the UI event loop.
         Platforms must implement this method.
         """
-        raise NotImplementedError("HTMLApplication.quit() not implemented")
+        raise NotImplementedError("HTMLApplication.quitUI() not implemented")
 
     def cancelStartup(self):
         self.quitUI()

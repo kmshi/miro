@@ -24,9 +24,10 @@ from Foundation import *
 
 from miro import app
 from miro import eventloop
-from miro import platformcfg
-from miro import platformutils
+from miro.platform import bundle
+from miro.platform.utils import osFilenameToFilenameType
 from miro.frontends.html.displaybase import VideoDisplayBase
+from miro.platform.frontends.html import threads
 from miro.playbackcontroller import PlaybackControllerBase
 
 from MainFrame import Slider, handleKey
@@ -60,12 +61,12 @@ class PlaybackController (PlaybackControllerBase):
     def playItemExternally(self, itemID):
         item = PlaybackControllerBase.playItemExternally(self, itemID)
         moviePath = item.getVideoFilename()
-        moviePath = platformutils.filenameTypeToOSFilename(moviePath)
+        moviePath = filenameTypeToOSFilename(moviePath)
 
         ws = NSWorkspace.sharedWorkspace()
         ok, externalApp, movieType = ws.getInfoForFile_application_type_(moviePath)
         if ok:
-            if externalApp == platformcfg.getBundlePath():
+            if externalApp == bundle.getBundlePath():
                 print 'WARNING, trying to play movie externally with ourselves.'
                 ok = False
             else:
@@ -185,12 +186,12 @@ class VideoDisplayController (NSObject):
         self.systemActivityUpdaterTimer = nil
         self.reset()
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def onSelected(self):
         self.enableSecondaryControls(YES)
         self.preventSystemSleep(True)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def onDeselected(self):
         self.enableSecondaryControls(NO)
         self.preventSystemSleep(False)
@@ -242,7 +243,7 @@ class VideoDisplayController (NSObject):
     def playPause_(self, sender):
         eventloop.addUrgentCall(lambda:app.controller.playbackController.playPause(), "Play Video")
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def play(self):
         nc = NSNotificationCenter.defaultCenter()
         nc.postNotificationName_object_(u'videoWillPlay', nil)
@@ -250,7 +251,7 @@ class VideoDisplayController (NSObject):
         self.enableSecondaryControls(YES)
         self.updatePlayPauseButton('pause')
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def pause(self):
         nc = NSNotificationCenter.defaultCenter()
         nc.postNotificationName_object_(u'videoWillPause', nil)
@@ -259,7 +260,7 @@ class VideoDisplayController (NSObject):
     def stop_(self, sender):
         eventloop.addUrgentCall(lambda:app.controller.playbackController.stop(), "Stop Video")
     
-    @platformutils.onMainThread
+    @threads.onMainThread
     def stop(self):
         nc = NSNotificationCenter.defaultCenter()
         nc.postNotificationName_object_(u'videoWillStop', nil)
@@ -272,14 +273,14 @@ class VideoDisplayController (NSObject):
             self.videoDisplay.goFullScreen()
         eventloop.addUrgentCall(lambda:performInEventLoop(), "Play Video Fullscreen")
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def goFullScreen(self):
         self.videoAreaView.enterFullScreen()
 
     def exitFullScreen_(self, sender):
         self.exitFullScreen()
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def exitFullScreen(self):
         self.videoAreaView.exitFullScreen()
 
@@ -312,7 +313,7 @@ class VideoDisplayController (NSObject):
     def setVolume_(self, sender):
         self.videoDisplay.setVolume(sender.floatValue())
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def setVolume(self, level):
         if self.muteButton.state() == NSOnState:
             self.volumeSlider.setFloatValue_(level)
@@ -363,7 +364,7 @@ class VideoAreaView (NSView):
                                              self.window())
         
     def teardown(self):
-        platformutils.warnIfNotOnMainThread('VideoAreaView.teardown')
+        threads.warnIfNotOnMainThread('VideoAreaView.teardown')
         nc = NSNotificationCenter.defaultCenter()
         nc.removeObserver_name_object_(self, nil, nil)
         if self.videoWindow.isFullScreen:
@@ -372,7 +373,7 @@ class VideoAreaView (NSView):
         self.videoWindow.orderOut_(nil)
         self.videoWindow.teardown()
 
-    @platformutils.onMainThreadWaitingUntilDone
+    @threads.onMainThreadWaitingUntilDone
     def activateVideoWindow(self):
         if self.window().isMiniaturized():
             self.window().deminiaturize_(nil)
@@ -386,7 +387,7 @@ class VideoAreaView (NSView):
         NSColor.blackColor().set()
         NSRectFill(rect)
     
-    @platformutils.onMainThreadWaitingUntilDone
+    @threads.onMainThreadWaitingUntilDone
     def adjustVideoWindowFrame(self):
         if self.window() is nil:
             return
@@ -412,7 +413,7 @@ class VideoAreaView (NSView):
         self.window().addChildWindow_ordered_(self.videoWindow, NSWindowAbove)
         self.window().orderFront_(nil)
     
-    @platformutils.onMainThread
+    @threads.onMainThread
     def enterFullScreen(self):
         self.adjustVideoWindowFrame()
         if self.window() is not nil:
@@ -420,7 +421,7 @@ class VideoAreaView (NSView):
             self.window().removeChildWindow_(self.videoWindow)
             self.window().orderOut_(nil)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def exitFullScreen(self):
         if self.videoWindow.isFullScreen:
             self.window().orderFront_(nil)
@@ -450,13 +451,13 @@ class VideoWindow (NSWindow):
         self.installRendererView_(renderer.view)
         self.palette.setup(item, renderer)
         if self.isFullScreen:
-            platformutils.callOnMainThreadAfterDelay(0.5, self.palette.reveal, self)
+            threads.callOnMainThreadAfterDelay(0.5, self.palette.reveal, self)
     
     def teardown(self):
-        platformutils.warnIfNotOnMainThread('VideoWindow.teardown')
+        threads.warnIfNotOnMainThread('VideoWindow.teardown')
         self.setContentView_(nil)
 
-    @platformutils.onMainThreadWaitingUntilDone
+    @threads.onMainThreadWaitingUntilDone
     def installRendererView_(self, view):
         if self.contentView() is not nil:
             self.contentView().removeFromSuperviewWithoutNeedingDisplay()
@@ -469,7 +470,7 @@ class VideoWindow (NSWindow):
         return self.isFullScreen
 
     def enterFullScreen(self, screen):
-        platformutils.warnIfNotOnMainThread('VideoWindow.enterFullScreen')
+        threads.warnIfNotOnMainThread('VideoWindow.enterFullScreen')
         screens = NSScreen.screens()
         if len(screens) > 0:
             screenWithMenuBar = screens[0]
@@ -482,7 +483,7 @@ class VideoWindow (NSWindow):
         self.makeKeyAndOrderFront_(nil)
 
     def exitFullScreen(self):
-        platformutils.warnIfNotOnMainThread('VideoWindow.exitFullScreen')
+        threads.warnIfNotOnMainThread('VideoWindow.exitFullScreen')
         NSCursor.setHiddenUntilMouseMoves_(NO)
         self.isFullScreen = NO
         self.palette.remove()
@@ -654,7 +655,7 @@ class FullScreenPalette (NSWindow):
         self.update_(nil)
 
     def reveal(self, parent):
-        platformutils.warnIfNotOnMainThread('FullScreenPalette.reveal')
+        threads.warnIfNotOnMainThread('FullScreenPalette.reveal')
         if not self.isVisible():
             self.update_(nil)
             self.volumeSlider.setFloatValue_(app.controller.videoDisplay.getVolume())
@@ -676,7 +677,7 @@ class FullScreenPalette (NSWindow):
             self.update_(nil)
     
     def conceal(self):
-        platformutils.warnIfNotOnMainThread('FullScreenPalette.conceal')
+        threads.warnIfNotOnMainThread('FullScreenPalette.conceal')
         if self.autoConcealTimer is not nil:
             self.autoConcealTimer.invalidate()
             self.autoConcealTimer = nil
@@ -737,7 +738,7 @@ class FullScreenPalette (NSWindow):
         self.playPauseButton.setAlternateImage_(NSImage.imageNamed_(u'fs-button-play-alt'))
 
     def remove(self):
-        platformutils.warnIfNotOnMainThread('FullScreenPalette.remove')
+        threads.warnIfNotOnMainThread('FullScreenPalette.remove')
         if self.parentWindow() is not nil:
             self.parentWindow().removeChildWindow_(self)
         self.orderOut_(nil)

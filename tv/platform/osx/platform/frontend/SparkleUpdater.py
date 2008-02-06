@@ -18,7 +18,7 @@
 import objc
 import Foundation
 
-from miro import platformutils
+from miro.platform.frontends.html import threads
 
 ###############################################################################
 
@@ -34,7 +34,7 @@ def setup():
     updater.scheduleCheckWithInterval_(0)
 
 
-@platformutils.onMainThread
+@threads.onMainThread
 def handleNewUpdate(latest):
     """ A new update has been found, the Sparkle framework will now take control
     and perform user interaction and automatic update on our behalf. Since the

@@ -29,7 +29,7 @@ from itertools import chain
 import logging
 from miro import util
 
-from miro.platform.frontends.html.threading import inMainThread
+from miro.platform.frontends.html.threads import inMainThread
 
 # FIXME add support for onlyBody parameter for static templates so we
 #       don't need to strip the outer HTML

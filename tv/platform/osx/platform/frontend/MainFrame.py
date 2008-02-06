@@ -31,10 +31,10 @@ from miro import config
 from miro import folder
 from miro.frontends.html import dialogs, keyboard
 from miro import playlist
-from miro import resources
+from miro.platform import resources
 from miro import eventloop
 from miro import searchengines
-from miro import platformutils
+from miro.platform.frontends.html import threads
 
 from miro.gtcache import gettext as _
 
@@ -173,7 +173,7 @@ class MainController (NSWindowController):
     
     ### Switching displays ###
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def onSelectedTabChange(self, strings, actionGroups, guideURL,
             videoFilename):
         app.controller.setGuideURL(guideURL)
@@ -196,7 +196,7 @@ class MainController (NSWindowController):
             # back when it's ready to display without flickering.
             display.callWhenReadyToDisplay(lambda: self.doSelectDisplay(display, area))
 
-    @platformutils.onMainThreadWaitingUntilDone
+    @threads.onMainThreadWaitingUntilDone
     def doSelectDisplay(self, display, area):
         if area is not None:
             area.setDisplay(display, self.frame)
@@ -453,7 +453,7 @@ class DisplayHostView (NSView):
         self.scheduledDisplay = display
     
     def setDisplay(self, display, owner):
-        platformutils.warnIfNotOnMainThread('DisplayHostView.setDisplay')
+        threads.warnIfNotOnMainThread('DisplayHostView.setDisplay')
         self.scheduledDisplay = None
 
         # Send notification to old display if any
@@ -543,7 +543,7 @@ class ProgressDisplayView (NSView):
         
         self.refresh_(nil)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def setup(self, renderer):
         if self.renderer != renderer:
             self.renderer = renderer
@@ -629,7 +629,7 @@ class Slider (NSView):
         self.sliderWasReleased = None
         return self
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def setFloatValue_(self, value):
         self.value = value
         self.setNeedsDisplay_(YES)

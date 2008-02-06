@@ -15,25 +15,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-import os
+from miro.util import returnsBinary
 
-from miro import prefs
-from miro import config
-import urllib
-from miro import platformcfg
+# Takes filename given by Python or the PyObjC bridge and turn it into a FilenameType
+@returnsBinary
+def osFilenameToFilenameType(filename):
+    if isinstance(filename, str):
+        return FilenameType(filename)
+    return filename.encode('utf-8','replace')
 
-# Find the full path to a resource data file. 'relative_path' is
-# expected to be supplied in Unix format, with forward-slashes as
-# separators. The output, though, uses the native platform separator.
-def path(relative_path):
-    rsrcpath = os.path.join(platformcfg.getBundleResourcePath(), u'resources', relative_path)
-    return os.path.abspath(rsrcpath)
+# Takes an array of filenames given by the OS and turn them into a FilenameTypes
+def osFilenamesToFilenameTypes(filenames):
+    return [osFilenameToFilenameType(filename) for filename in filenames]
 
-# As path(), but return a file: URL instead.
-def url(relative_path):
-    return u"file://" + urllib.quote(path(relative_path))
-
-def absoluteUrl(absolute_path):
-    """Like url, but without adding the resource directory.
-    """
-    return u"file://" + urllib.quote(absolute_path)
+# Takes a FilenameType and turn it into something the PyObjC bridge accepts.
+def filenameTypeToOSFilename(filename):
+    return filename.decode('utf-8')

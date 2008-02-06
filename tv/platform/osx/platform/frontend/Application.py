@@ -40,7 +40,7 @@ from miro import filetypes
 from miro import eventloop
 from miro import autoupdate
 from miro import singleclick
-from miro import platformutils
+from miro.platform.utils import ensureDownloadDaemonIsTerminated, osFilenamesToFilenameTypes
 
 from miro.gtcache import gettext as _
 
@@ -59,7 +59,7 @@ class Application(HTMLApplication):
         HTMLApplication.__init__(self)
 
     def quitUI(self):
-        platformutils.ensureDownloadDaemonIsTerminated()
+        ensureDownloadDaemonIsTerminated()
         NSApplication.sharedApplication().terminate_(nil)
 
     def Run(self):
@@ -134,7 +134,7 @@ class AppController (NSObject):
         app.controller.startup()
 
         # The database should be ready at this point, check Miro migration.
-        import migrateappname
+        from miro.platform import migrateappname
         migrateappname.migrateVideos('Democracy', 'Miro')
 
         # Initialize the Growl notifier
@@ -168,7 +168,7 @@ class AppController (NSObject):
         
         if not self.emergencyShutdown:
             # Ensure that the download daemon is not running anymore at this point
-            platformutils.ensureDownloadDaemonIsTerminated()    
+            ensureDownloadDaemonIsTerminated()    
             # Call shutdown on backend
             app.controller.onShutdown()
 
@@ -187,7 +187,7 @@ class AppController (NSObject):
         logging.info("Downloader daemon has been terminated (status: %d)" % status)
 
     def application_openFiles_(self, nsapp, filenames):
-        filenames = platformutils.osFilenamesToFilenameTypes(filenames)
+        filenames = osFilenamesToFilenameTypes(filenames)
         eventloop.addUrgentCall(lambda:singleclick.handleCommandLineArgs(filenames), "Open local file(s)")
         nsapp.replyToOpenOrPrint_(NSApplicationDelegateReplySuccess)
 
@@ -301,7 +301,7 @@ class AppController (NSObject):
         openPanel.setCanChooseDirectories_(NO)
         result = openPanel.runModalForDirectory_file_types_(NSHomeDirectory(), nil, nil)
         if result == NSOKButton:
-            filenames = platformutils.osFilenamesToFilenameTypes(openPanel.filenames())
+            filenames = osFilenamesToFilenameTypes(openPanel.filenames())
             eventloop.addUrgentCall(lambda:singleclick.parseCommandLineArgs(filenames), "Open local file(s)")
     
     def downloadVideo_(self, sender):

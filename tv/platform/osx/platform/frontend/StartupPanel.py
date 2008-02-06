@@ -27,7 +27,8 @@ from miro import util
 from miro import prefs
 from miro import config
 from miro import eventloop
-from miro import platformutils
+from miro.platform.utils import osFilenameToFilenameType
+from miro.platform.frontends.html import threads
 
 from miro.gtcache import gettext as _
 
@@ -205,7 +206,7 @@ class StartupPanelController (NSWindowController):
                 path = os.path.expanduser(u'~/')
             else:
                 path = self.customLocationField.stringValue()
-            path = platformutils.osFilenameToFilenameType(path)
+            path = osFilenameToFilenameType(path)
             self.keepFinding = True
             self.gathered = util.gatherVideos(path, self.onProgressFindingVideos)
             self.finishFindVideoTask(True)
@@ -215,13 +216,13 @@ class StartupPanelController (NSWindowController):
     def onProgressFindingVideos(self, parsed, found):
         self.parsed = parsed
         progress = self.findProgressLabelFormat % (parsed, found)
-        platformutils.callOnMainThread(self.findProgressLabel.setStringValue_, progress)
+        threads.callOnMainThread(self.findProgressLabel.setStringValue_, progress)
         return self.keepFinding
             
     def cancelFind_(self, sender):
         self.keepFinding = False
     
-    @platformutils.onMainThread
+    @threads.onMainThread
     def finishFindVideoTask(self, goNext=False):
         self.initFindVideosPanelState()
         finalState = self.findProgressLabelFormat % (self.parsed, len(self.gathered))

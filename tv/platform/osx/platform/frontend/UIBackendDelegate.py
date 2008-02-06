@@ -33,8 +33,9 @@ from miro import prefs
 from miro import config
 from miro.frontends.html import dialogs
 from miro import eventloop
-from miro import platformcfg
-from miro import platformutils
+from miro.platform import bundle
+from miro.platform.utils import filenameTypeToOSFilename
+from miro.platform.frontends.html import threads
 
 from StartupPanel import StartupPanelController
 import GrowlNotifier
@@ -57,7 +58,7 @@ def showWarningDialog(summary, message, buttons=None):
 def showCriticalDialog(summary, message, buttons=None):
     return showDialog(summary, message, buttons, NSCriticalAlertStyle)
 
-@platformutils.onMainThreadWithReturn
+@threads.onMainThreadWithReturn
 def showDialog(summary, message, buttons, style):
     alert = NSAlert.alloc().init()
     alert.setAlertStyle_(style)
@@ -66,7 +67,7 @@ def showDialog(summary, message, buttons, style):
     if buttons is not None:
         for title in buttons:
             alert.addButtonWithTitle_(unicode(title))
-    result = platformutils.callOnMainThreadAndWaitReturnValue(alert.runModal)
+    result = threads.callOnMainThreadAndWaitReturnValue(alert.runModal)
     result -= NSAlertFirstButtonReturn
     del alert
     return result
@@ -103,16 +104,16 @@ class UIBackendDelegate:
         startupController = StartupPanelController.alloc().init()
         startupController.run(terminationCallback)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def askForSavePathname(self, title, callback, defaultDirectory=None, defaultFilename=None):
         self.savePanelHandler.run(callback, defaultFilename)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def askForOpenPathname(self, title, callback, defaultDirectory=None,
             typeString=None, types=None):
         self.openPanelHandler.run(callback, defaultDirectory, types)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def runDialog(self, dialog):
         if isinstance(dialog, dialogs.TextEntryDialog):
             dlog = TextEntryController.alloc().initWithDialog_(dialog)
@@ -160,7 +161,7 @@ class UIBackendDelegate:
         NSWorkspace.sharedWorkspace().openURL_(NSURL.URLWithString_(url))
 
     def revealFile(self, filename):
-        filename = platformutils.filenameTypeToOSFilename(filename)
+        filename = filenameTypeToOSFilename(filename)
         NSWorkspace.sharedWorkspace().selectFile_inFileViewerRootedAtPath_(filename, nil)
 
     def updateAvailableItemsCountFeedback(self, count):
@@ -200,7 +201,7 @@ class UIBackendDelegate:
             finally:
                 badgedIcon.unlockFocus()
             appl = NSApplication.sharedApplication()
-            platformutils.callOnMainThreadAndWaitUntilDone(appl.setApplicationIconImage_, badgedIcon)
+            threads.callOnMainThreadAndWaitUntilDone(appl.setApplicationIconImage_, badgedIcon)
     
     def notifyDownloadCompleted(self, item):
         GrowlNotifier.notifyDownloadComplete(item.getTitle())
@@ -208,7 +209,7 @@ class UIBackendDelegate:
     def notifyDownloadFailed(self, item):
         GrowlNotifier.notifyDownloadFailed(item.getTitle())
     
-    @platformutils.onMainThread
+    @threads.onMainThread
     def notifyUnkownErrorOccurence(self, when, log = ''):
         if config.get(prefs.SHOW_ERROR_DIALOG):
             controller = ExceptionReporterController.alloc().initWithMoment_log_(when, log)
@@ -229,7 +230,7 @@ class UIBackendDelegate:
         if 'AutoLaunchedApplicationDictionary' not in lwdomain:
             lwdomain['AutoLaunchedApplicationDictionary'] = list()
         launchedApps = lwdomain['AutoLaunchedApplicationDictionary']
-        ourPath = platformcfg.getBundlePath()
+        ourPath = bundle.getBundlePath()
         ourEntry = None
         for entry in launchedApps:
             if entry.get('Path') == ourPath:
@@ -252,7 +253,7 @@ class UIBackendDelegate:
             url = ""
         return url
     
-    @platformutils.onMainThread
+    @threads.onMainThread
     def showContextMenu(self, items):
         nsmenu = NSMenu.alloc().init()
         nsmenu.setAutoenablesItems_(NO)
@@ -345,7 +346,7 @@ class ExceptionReporterController (NSWindowController):
     
     def initWithMoment_log_(self, when, log):
         self = super(ExceptionReporterController, self).initWithWindowNibName_owner_(u"ExceptionReporterPanel", self)
-        self.info = config.getAppConfig()
+        self.info = app.configfile.copy()
         self.info['when'] = when
         self.info['log'] = log
         return self
@@ -367,7 +368,7 @@ class ExceptionReporterController (NSWindowController):
         self.logView.setString_(logmsg)
     
     def showPanel(self):
-        platformutils.warnIfNotOnMainThread('ExceptionReporterController.showPanel')
+        threads.warnIfNotOnMainThread('ExceptionReporterController.showPanel')
         NSApplication.sharedApplication().runModalForWindow_(self.window())
     
     def dismissPanel_(self, sender):

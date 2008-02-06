@@ -26,15 +26,14 @@ from WebKit import *
 from Foundation import *
 from PyObjCTools import AppHelper
 
+from miro import config
+from miro import prefs
+from miro import templatehelper
 from miro.frontends.html import keyboard
 from miro.frontends.html.displaybase import Display
-from miro import prefs
-from miro import config
-from miro import resources
-from miro import platformutils
-from miro import templatehelper
-
-from miro.frontend.MainFrame import mapKey, handleKey
+from miro.platform import resources
+from miro.platform.frontend.MainFrame import mapKey, handleKey
+from miro.platform.frontends.html import threads
 
 ###############################################################################
 # These are used by the channel guide. This platform uses the
@@ -76,8 +75,10 @@ class HTMLDisplay (Display):
         try:
             return self._web
         except AttributeError:
+            print 'creating web'
             self._web = ManagedWebView.alloc().initWithInitialHTML_existinView_loadFinished_loadURL_sizeHint_baseURL_(
                             self.html, None, self.nowReadyToDisplay, lambda x:self.onURLLoad(unicode(x)), self.displaySizeHint, self.baseURL)
+            print 'created web'
             return self._web
     web = property(get_web)
 
@@ -164,10 +165,10 @@ class HTMLDisplay (Display):
     def unlink(self):
         webView = self.web.getView()
         if webView is not nil:
-            platformutils.warnIfNotOnMainThread('HTMLDisplay.unlink')
+            threads.warnIfNotOnMainThread('HTMLDisplay.unlink')
             webView.setHostWindow_(self.currentFrame.obj.window()) # not very pretty
     
-    @platformutils.onMainThreadWaitingUntilDone
+    @threads.onMainThreadWaitingUntilDone
     def cancel(self):
         logging.debug("DTV: Canceling load of WebView %s" % self.web.getView())
         self.web.getView().stopLoading_(nil)
@@ -189,8 +190,8 @@ class ManagedWebHTMLView (WebHTMLView):
         # We want a right click to also select what's underneath so we intercept
         # the event here, force the left click handler first and reschedule the
         # right click handler.
-        platformutils.callOnMainThread(self.mouseDown_, event)
-        platformutils.callOnMainThreadAfterDelay(0.2, WebHTMLView.rightMouseDown_, self, event)
+        threads.callOnMainThread(self.mouseDown_, event)
+        threads.callOnMainThreadAfterDelay(0.2, WebHTMLView.rightMouseDown_, self, event)
 
 ###############################################################################
 
@@ -206,11 +207,13 @@ class ManagedWebView (NSObject):
         self.view = existingView
         self.openPanelContextID = 1
         self.openPanelContext = dict()
-        platformutils.callOnMainThreadAndWaitUntilDone(self.initWebView, initialHTML, sizeHint, baseURL)        
+        print 'calling'
+        threads.callOnMainThreadAndWaitUntilDone(self.initWebView, initialHTML, sizeHint, baseURL)        
+        print 'done'
         return self
 
     def initWebView(self, initialHTML, sizeHint, baseURL):
-        platformutils.warnIfNotOnMainThread('ManagedWebView.initWebView')
+        threads.warnIfNotOnMainThread('ManagedWebView.initWebView')
         if not self.view:
             self.view = WebView.alloc().init()
             #print "***** Creating new WebView %s" % self.view
@@ -263,7 +266,7 @@ class ManagedWebView (NSObject):
     # has been loaded
     def webView_didFinishLoadForFrame_(self, webview, frame):
         if (not self.initialLoadFinished) and (frame is self.view.mainFrame()):
-            platformutils.warnIfNotOnMainThread('ManagedWebView.webView_didFinishLoadForFrame_')
+            threads.warnIfNotOnMainThread('ManagedWebView.webView_didFinishLoadForFrame_')
             # Execute any function calls we queued because the page load
             # hadn't completed
             self.initialLoadFinished = True
@@ -301,7 +304,7 @@ class ManagedWebView (NSObject):
 
     # Intercept navigation actions and give program a chance to respond
     def webView_decidePolicyForNavigationAction_request_frame_decisionListener_(self, webview, action, request, frame, listener):
-        platformutils.warnIfNotOnMainThread('ManagedWebView.webView_decidePolicyForNavigationAction_request_frame_decisionListener_')
+        threads.warnIfNotOnMainThread('ManagedWebView.webView_decidePolicyForNavigationAction_request_frame_decisionListener_')
         method = request.HTTPMethod()
         url = unicode(request.URL())
         body = request.HTTPBody()
@@ -328,7 +331,7 @@ class ManagedWebView (NSObject):
 
     # Redirect resource: links to files in resource bundle
     def webView_resource_willSendRequest_redirectResponse_fromDataSource_(self, webview, resourceCookie, request, redirectResponse, dataSource):
-        platformutils.warnIfNotOnMainThread('ManagedWebView.webView_resource_willSendRequest_redirectResponse_fromDataSource_')
+        threads.warnIfNotOnMainThread('ManagedWebView.webView_resource_willSendRequest_redirectResponse_fromDataSource_')
         url = request.URL().absoluteString()
 
         match = templatehelper.resourcePattern.match(url)
@@ -381,7 +384,7 @@ class ManagedWebView (NSObject):
         if not self.initialLoadFinished:
             self.execQueue.append(func)
         else:
-            platformutils.callOnMainThreadAndWaitUntilDone(func)
+            threads.callOnMainThreadAndWaitUntilDone(func)
 
     # Decorator to make using execAfterLoad easier
     def deferUntilAfterLoad(func):

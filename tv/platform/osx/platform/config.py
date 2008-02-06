@@ -20,14 +20,13 @@ from PyObjCTools import Conversion
 
 import os
 import objc
-import logging
 
-from miro import util
+from miro import app
 from miro import prefs
-from miro import config
-import keychain
-from miro import resources
-from miro import platformutils
+from miro.platform import bundle
+from miro.platform import keychain
+from miro.platform import resources
+from miro.platform.filenames import osFilenameToFilenameType
 
 sysconfPath = objc.pathForFramework('/System/Library/Frameworks/SystemConfiguration.framework')
 sysconfBundle = NSBundle.bundleWithPath_(sysconfPath)
@@ -38,7 +37,7 @@ MOVIES_DIRECTORY_PARENT = os.path.expanduser('~/Movies')
 SUPPORT_DIRECTORY_PARENT = os.path.expanduser('~/Library/Application Support')
 
 def load():
-    domain = getBundleIdentifier()
+    domain = bundle.getBundleIdentifier()
     plist =  NSUserDefaults.standardUserDefaults().persistentDomainForName_(domain)
     try:
         pydict = Conversion.pythonCollectionFromPropertyList(plist)
@@ -57,7 +56,7 @@ def load():
             elif type(v) is objc._pythonify.OC_PythonLong:
                 pydict[k] = long(v)
             elif k == prefs.MOVIES_DIRECTORY.key:
-                pydict[k] = platformutils.osFilenameToFilenameType(v)
+                pydict[k] = osFilenameToFilenameType(v)
 
     return pydict
 
@@ -69,14 +68,15 @@ def save(data):
         print data
         raise
     else:
-        domain = getBundleIdentifier()
+        domain = bundle.getBundleIdentifier()
         defaults = NSUserDefaults.standardUserDefaults()
         defaults.setPersistentDomain_forName_(plist, domain)
         defaults.synchronize()
 
 def get(descriptor):
     if descriptor == prefs.MOVIES_DIRECTORY:
-        path = os.path.join(MOVIES_DIRECTORY_PARENT, config.get(prefs.SHORT_APP_NAME, False))
+        path = os.path.join(MOVIES_DIRECTORY_PARENT,
+                app.configfile.get('shortAppName'))
         try:
             os.makedirs(os.path.join(path,'Incomplete Downloads'))
         except:
@@ -90,7 +90,8 @@ def get(descriptor):
         return os.path.abspath(resources.path("../locale"))
 
     elif descriptor == prefs.SUPPORT_DIRECTORY:
-        path = os.path.join(SUPPORT_DIRECTORY_PARENT, config.get(prefs.SHORT_APP_NAME, False))
+        path = os.path.join(SUPPORT_DIRECTORY_PARENT,
+                app.configfile.get('shortAppName'))
         os.environ['APPDATA'] = path # This is for the Bittorent module
         try:
             os.makedirs(path)
@@ -134,9 +135,6 @@ def get(descriptor):
     elif descriptor == prefs.HTTP_PROXY_AUTHORIZATION_PASSWORD:
         return _getProxyAuthInfo('password')
     
-    elif descriptor == prefs.THEME_DIRECTORY:
-        return os.path.join(getBundlePath(), "Contents", "Theme")
-    
     return descriptor.default
 
 def _makeSupportFilePath(filename):
@@ -158,16 +156,3 @@ def _getProxyAuthInfo(key, default=None):
     if authInfo is None or key not in authInfo:
         return default
     return authInfo[key]
-
-###############################################################################
-#### Bundle information accessors                                          ####
-###############################################################################
-
-def getBundleIdentifier():
-    return unicode(NSBundle.mainBundle().bundleIdentifier())
-
-def getBundlePath():
-    return unicode(NSBundle.mainBundle().bundlePath())
-
-def getBundleResourcePath():
-    return unicode(NSBundle.mainBundle().resourcePath())

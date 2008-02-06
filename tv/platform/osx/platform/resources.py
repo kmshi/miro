@@ -17,16 +17,14 @@
 
 import os
 
-from miro import prefs
-from miro import config
 import urllib
-from miro import platformcfg
+from miro.platform import bundle
 
 # Find the full path to a resource data file. 'relative_path' is
 # expected to be supplied in Unix format, with forward-slashes as
 # separators. The output, though, uses the native platform separator.
 def path(relative_path):
-    rsrcpath = os.path.join(platformcfg.getBundleResourcePath(), u'resources', relative_path)
+    rsrcpath = os.path.join(bundle.getBundleResourcePath(), u'resources', relative_path)
     return os.path.abspath(rsrcpath)
 
 # As path(), but return a file: URL instead.
@@ -37,3 +35,7 @@ def absoluteUrl(absolute_path):
     """Like url, but without adding the resource directory.
     """
     return u"file://" + urllib.quote(absolute_path)
+
+def theme_path(theme, relative_path):
+    return os.path.join(bundle.getBundlePath(), "Contents", "Theme", theme,
+            relative_path)

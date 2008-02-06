@@ -28,10 +28,11 @@ from Foundation import *
 from miro.videorenderer import VideoRenderer
 from miro import prefs
 from miro import config
-import qtcomp
-from miro import platformcfg
-from miro import platformutils
+from miro.platform import qtcomp
+from miro.platform import bundle
+from miro.platform.utils import getMajorOSVersion, filenameTypeToOSFilename, getResizedJPEGData
 from miro import download_utils
+from miro.platform.frontends.html import threads
 
 from miro.gtcache import gettext as _
 
@@ -54,7 +55,7 @@ class QuicktimeRenderer (VideoRenderer):
         self.registerComponents()
 
     def registerComponents(self):
-        bundlePath = platformcfg.getBundlePath()
+        bundlePath = bundle.getBundlePath()
         componentsDirectoryPath = os.path.join(bundlePath, 'Contents', 'Components')
         components = glob.glob(os.path.join(componentsDirectoryPath, '*.component'))
         for component in components:
@@ -68,21 +69,21 @@ class QuicktimeRenderer (VideoRenderer):
 
     def checkComponentCompatibility(self, name):
         if "Perian" in name or "AC3" in name or "A52" in name:
-            if platformutils.getMajorOSVersion() <= 7:
+            if getMajorOSVersion() <= 7:
                 return False
         return True
 
     def registerMovieObserver(self, movie):
-        platformutils.warnIfNotOnMainThread('QuicktimeRenderer.registerMovieObserver')
+        threads.warnIfNotOnMainThread('QuicktimeRenderer.registerMovieObserver')
         nc = NSNotificationCenter.defaultCenter()
         nc.addObserver_selector_name_object_(self.delegate, 'handleMovieNotification:', QTMovieDidEndNotification, movie)
 
     def unregisterMovieObserver(self, movie):
-        platformutils.warnIfNotOnMainThread('QuicktimeRenderer.unregisterMovieObserver')
+        threads.warnIfNotOnMainThread('QuicktimeRenderer.unregisterMovieObserver')
         nc = NSNotificationCenter.defaultCenter()
         nc.removeObserver_name_object_(self.delegate, QTMovieDidEndNotification, movie)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def reset(self):
         if self.view is not nil:
             self.view.setMovie_(nil)
@@ -91,7 +92,7 @@ class QuicktimeRenderer (VideoRenderer):
         self.movie = nil
         self.cachedMovie = nil
 
-    @platformutils.onMainThreadWithReturn
+    @threads.onMainThreadWithReturn
     def canPlayFile(self, filename):
         canPlay = False
         qtmovie = self.getMovieFromFile(filename)
@@ -124,7 +125,7 @@ class QuicktimeRenderer (VideoRenderer):
 
         return canPlay
 
-    @platformutils.onMainThreadWaitingUntilDone
+    @threads.onMainThreadWaitingUntilDone
     def selectFile(self, filename):
         qtmovie = self.getMovieFromFile(filename)
         self.reset()
@@ -136,7 +137,7 @@ class QuicktimeRenderer (VideoRenderer):
             self.registerMovieObserver(qtmovie)
 
     def getMovieFromFile(self, filename):
-        osfilename = platformutils.filenameTypeToOSFilename(filename)
+        osfilename = filenameTypeToOSFilename(filename)
         url = NSURL.fileURLWithPath_(osfilename)
         if self.cachedMovie is not nil and self.cachedMovie.attributeForKey_(QTMovieURLAttribute) == url:
             qtmovie = self.cachedMovie
@@ -145,33 +146,33 @@ class QuicktimeRenderer (VideoRenderer):
             self.cachedMovie = qtmovie
         return qtmovie
 
-    @platformutils.onMainThreadWithReturn
+    @threads.onMainThreadWithReturn
     def fillMovieData(self, filename, movie_data):
         logging.info("Processing movie %s" % filename)
-        osfilename = platformutils.filenameTypeToOSFilename(filename)
+        osfilename = filenameTypeToOSFilename(filename)
         (qtmovie, error) = QTMovie.movieWithFile_error_(osfilename)
         if qtmovie is not None:
             movie_data["duration"] = int(movieDuration(qtmovie) * 1000)
-            if platformutils.getMajorOSVersion() > 7:
+            if getMajorOSVersion() > 7:
                 movie_data["screenshot"] = extractIcon(qtmovie, filename)
             del qtmovie
             return True
         return False
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def play(self):
         self.view.play_(self)
         self.view.setNeedsDisplay_(YES)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def pause(self):
         self.view.pause_(nil)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def stop(self):
         self.view.pause_(nil)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def goToBeginningOfMovie(self):
         if self.movie is not nil:
             self.movie.gotoBeginning()
@@ -185,9 +186,9 @@ class QuicktimeRenderer (VideoRenderer):
         qttime = self.movie.currentTime()
         return _qttime2secs(qttime)
 
-    @platformutils.onMainThread
+    @threads.onMainThread
     def setCurrentTime(self, time):
-        platformutils.warnIfNotOnMainThread('QuicktimeRenderer.setCurrentTime')
+        threads.warnIfNotOnMainThread('QuicktimeRenderer.setCurrentTime')
         if self.movie is not nil:
             qttime = self.movie.currentTime()
             qttime.timeValue = time * float(qttime.timeScale)
@@ -199,11 +200,11 @@ class QuicktimeRenderer (VideoRenderer):
         return self.movie.rate()
 
     def setRate(self, rate):
-        platformutils.warnIfNotOnMainThread('QuicktimeRenderer.setRate')
+        threads.warnIfNotOnMainThread('QuicktimeRenderer.setRate')
         if self.movie is not nil:
             self.movie.setRate_(rate)
         
-    @platformutils.onMainThread
+    @threads.onMainThread
     def setVolume(self, level):
         if self.movie is not nil:
             self.movie.setVolume_(level)
@@ -293,7 +294,7 @@ def extractIcon(qtmovie, filename):
         return ""
 
     frameRatio = frameSize.width / frameSize.height
-    jpegData = platformutils.getResizedJPEGData(frame, 226.0, 170.0)
+    jpegData = getResizedJPEGData(frame, 226.0, 170.0)
 
     if jpegData is not None:
         try:

@@ -26,8 +26,6 @@ import ctypes
 from miro.platform import proxyfind
 from miro.platform import resources
 
-app_config = util.readSimpleConfigFile(resources.path('app.config'))
-
 proxy_info = proxyfind.get_proxy_info()
 
 _specialFolderCSIDLs = {

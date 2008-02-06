@@ -23,6 +23,7 @@ import logging
 import os
 import shutil
 import threading
+import traceback
 import urllib
 
 from miro.frontends.html import dialogs

@@ -48,11 +48,11 @@ def activatePsyco():
 # =============================================================================
 
 def launchApplication():
-    import migrateappname
+    from miro.platform import migrateappname
     migrateappname.migrateSupport('Democracy', 'Miro')
 
-    from miro import platformutils
-    platformutils.initializeLocale()
+    from miro.platform.utils import initializeLocale
+    initializeLocale()
     
     from glob import glob
     theme = None
@@ -110,11 +110,6 @@ def launchDownloaderDaemon():
     logging.info('Increasing file descriptor count limit in Downloader.')
     resource.setrlimit(resource.RLIMIT_NOFILE, (-1,-1))
 
-    # Insert the downloader private module path
-    daemonPath = getModulePath('dl_daemon')
-    daemonPrivatePath = os.path.join(daemonPath, 'private')
-    sys.path[0:0] = [daemonPath, daemonPrivatePath]
-    
     # Make sure we don't leak from the downloader eventloop
     from miro import eventloop
 
@@ -127,7 +122,7 @@ def launchDownloaderDaemon():
     eventloop.connect('end-loop', endLoop)
     
     # And launch
-    import Democracy_Downloader
+    from miro.dl_daemon import Democracy_Downloader
     Democracy_Downloader.launch()
 
 # =============================================================================
@@ -136,15 +131,6 @@ def launchDownloaderDaemon():
 # cross the PyObjC bridge...
 #import objc
 #objc.setStrBridgeEnabled(False)
-
-# If the bundle is an alias bundle, we need to tweak the search path
-bundle = Foundation.NSBundle.mainBundle()
-bundleInfo = bundle.infoDictionary()
-if bundleInfo['PyOptions']['alias']:
-    root = os.path.dirname(bundle.bundlePath())
-    root = os.path.join(root, '..', '..')
-    root = os.path.normpath(root)
-    sys.path[0:0] = ['%s/portable' % root]
 
 # Activate psyco, if we are running on an Intel Mac
 #

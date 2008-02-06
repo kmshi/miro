@@ -1,4 +1,3 @@
-<<<<<<< .working
 # Miro - an RSS based video player application
 # Copyright (C) 2005-2007 Participatory Culture Foundation
 #
@@ -18,6 +17,10 @@
 
 """miro.platform.frontends.html.threading -- call a method in the Cocoa thread.
 """
+
+import threading
+
+from Foundation import NSObject, NSNumber
 
 ###############################################################################
 #### THREADING UTILITIES                                                   ####

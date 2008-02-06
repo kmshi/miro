@@ -26,7 +26,7 @@ from miro import views
 from miro import config
 from miro.frontends.html import dialogs
 from miro import eventloop
-from miro import platformutils
+from miro.platform.utils import filenameTypeToOSFilename, osFilenameToFilenameType, makeURLSafe
 
 from miro.gtcache import gettext as _
 
@@ -232,7 +232,7 @@ class DownloadsPrefsController (NSObject):
                 message = _(u'You\'ve selected a new folder to download movies to.  Should %s migrate your existing downloads there?  (Currently dowloading movies will not be moved until they finish).' % config.get(prefs.SHORT_APP_NAME))
                 def migrationCallback(dialog):
                     migrate = (dialog.choice == dialogs.BUTTON_YES)
-                    app.controller.changeMoviesDirectory(platformutils.osFilenameToFilenameType(newMoviesDirectory), migrate)
+                    app.controller.changeMoviesDirectory(osFilenameToFilenameType(newMoviesDirectory), migrate)
                 dlog = dialogs.ChoiceDialog(summary, message, dialogs.BUTTON_YES, dialogs.BUTTON_NO)
                 dlog.run(migrationCallback)
     
@@ -319,11 +319,11 @@ class FoldersPrefsController (NSObject):
         result = panel.runModalForDirectory_file_(nil, nil)
         
         if result == NSOKButton:
-            path = platformutils.osFilenameToFilenameType(panel.directory())
+            path = osFilenameToFilenameType(panel.directory())
             eventloop.addIdle(lambda:self.addFolder(path), 'Adding new watched folder')
 
     def addFolder(self, path):
-        feed.Feed(u'dtv:directoryfeed:%s' % platformutils.makeURLSafe(path))
+        feed.Feed(u'dtv:directoryfeed:%s' % makeURLSafe(path))
 
     def folderWasAdded(self, mapped, id):
         self.folders.append(mapped)
@@ -363,7 +363,7 @@ class FoldersPrefsController (NSObject):
             self.foldersTable.reloadData()
         else:
             if col.identifier() == 'location':
-                return platformutils.filenameTypeToOSFilename(self.folders[row].dir)
+                return filenameTypeToOSFilename(self.folders[row].dir)
             elif col.identifier() == 'asChannel':
                 return self.folders[row].visible
         return ''
