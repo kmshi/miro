@@ -26,7 +26,6 @@ import logging
 from miro.download_utils import nextFreeFilename
 from miro.platform.utils import confirmMainThread
 from gtk_queue import gtkAsyncMethod, gtkSyncMethod
-from miro.videorenderer import VideoRenderer
 
 from threading import Event
 
@@ -88,7 +87,7 @@ class Tester:
         del self.audiosink
         del self.videosink
 
-class Renderer(VideoRenderer):
+class Renderer:
     def __init__(self):
         confirmMainThread()
         self.playbin = gst.element_factory_make("playbin", "player")
@@ -190,8 +189,8 @@ class Renderer(VideoRenderer):
         confirmMainThread()
         print "getProgress: what does this do?"
 
-    @gtkSyncMethod
-    def getCurrentTime(self):
+    @gtkAsyncMethod
+    def getCurrentTime(self, callback):
         confirmMainThread()
         try:
             position, format = self.playbin.query_position(gst.FORMAT_TIME)
@@ -199,7 +198,7 @@ class Renderer(VideoRenderer):
         except Exception, e:
             print "getCurrentTime: caught exception: %s" % e
             position = 0
-        return position
+        callback(position)
 
     def seek(self, seconds):
         confirmMainThread()
@@ -220,7 +219,7 @@ class Renderer(VideoRenderer):
         self.play()
 #        print "playFromTime: starting playback from %s sec" % seconds
 
-    def getDuration(self):
+    def getDuration(self, callback):
         confirmMainThread()
         try:
             duration, format = self.playbin.query_duration(gst.FORMAT_TIME)
@@ -228,7 +227,7 @@ class Renderer(VideoRenderer):
         except Exception, e:
             print "getDuration: caught exception: %s" % e
             duration = 1
-        return duration
+        callback(duration)
 
     @gtkAsyncMethod
     def reset(self):

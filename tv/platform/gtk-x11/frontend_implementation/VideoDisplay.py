@@ -97,9 +97,15 @@ class VideoDisplay (VideoDisplayBase):
                 callback()
         next_renderer(-1, False)
 
-    def getRendererForItem(self, anItem):
+    def setRendererAndCallback(self, anItem, internal, external):
         self.renderersReady.wait()
-        return VideoDisplayBase.getRendererForItem(self, anItem)
+        for renderer in self.renderers:
+            if renderer.canPlayFile(anItem.getFilename()):
+                self.setActiveRenderer(renderer)
+                renderer.selectFile(anItem.getFilename())
+                internal()
+                return
+        external()
 
     @gtkAsyncMethod
     def _gtkInit(self):
@@ -147,6 +153,7 @@ class VideoDisplay (VideoDisplayBase):
             self.play(-1)
 
     def playFromTime(self, startTime):
+        
         self.play (startTime)
 
     def goToBeginningOfMovie(self):
@@ -169,14 +176,6 @@ class VideoDisplay (VideoDisplayBase):
     def moveVolumeSlider(self, volume):
         volumeScale = app.controller.frame.widgetTree['volume-scale']
         volumeScale.set_value(self.volume)
-
-    @gtkSyncMethod
-    def getLength(self):
-        """Get the length, in seconds, of the current video."""
-        if self.activeRenderer:
-            return self.activeRenderer.getLength()
-        else:
-            return 0
 
 ###############################################################################
 ###############################################################################
