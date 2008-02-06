@@ -16,13 +16,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
 import os
-from miro import util
 import _winreg
 import cPickle
 import string
-from miro import prefs
 import tempfile
 import ctypes
+
+from miro import app
+from miro import prefs
+from miro import util
 from miro.platform import proxyfind
 from miro.platform import resources
 
@@ -71,7 +73,7 @@ if _baseMoviesDirectory is None:
     _baseMoviesDirectory = os.path.join(getSpecialFolder('My Documents'),'My Videos')
 
 def _getMoviesDirectory():
-    path = os.path.join(_baseMoviesDirectory, app_config['shortAppName'])
+    path = os.path.join(_baseMoviesDirectory, app.configfile['shortAppName'])
     try:
         os.makedirs(os.path.join(path, 'Incomplete Downloads'))
     except:
@@ -157,11 +159,11 @@ def get(descriptor):
 
     elif descriptor == prefs.LOG_PATHNAME:
         return os.path.join(tempfile.gettempdir(), 
-                ('%s.log' % app_config['shortAppName']))
+                ('%s.log' % app.configfile['shortAppName']))
 
     elif descriptor == prefs.DOWNLOADER_LOG_PATHNAME:
         return os.path.join(tempfile.gettempdir(),
-            ('%s-downloader.log' % app_config['shortAppName']))
+            ('%s-downloader.log' % app.configfile['shortAppName']))
 
     elif descriptor == prefs.RUN_AT_STARTUP:
         # We use the legacy startup registry key, so legacy versions
@@ -174,7 +176,7 @@ def get(descriptor):
             try:
                 (name, val, type) = _winreg.EnumValue(folder,count)
                 count += 1
-                if (name == app_config['longAppName']):
+                if (name == app.configfile['longAppName']):
                     return True                    
             except:
                 return False

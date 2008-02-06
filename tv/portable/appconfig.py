@@ -49,6 +49,9 @@ class AppConfig(object):
         else:
             return self.default_vars[key]
 
+    def __getitem__(self, key):
+        return self.get(key, useThemeData=True)
+
     def contains(self, key, useThemeData=True):
         return ((useThemeData and key in self.theme_vars) or 
                 (key in self.default_vars))

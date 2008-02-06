@@ -365,11 +365,12 @@ class PyBridge:
     def handleCommandLine(self, commandLine):
         # Here's a massive hack to get command line parameters into config
         args = getArgumentList(commandLine)
+        theme = None
         for x in range(len(args)-1):
             if args[x] == '--theme':
-                config.__currentThemeHack = args[x+1]
-                config.load(theme = args[x+1])
+                theme = args[x+1]
                 break
+        config.load(theme)
 
         # Doesn't matter if this executes before the call to
         # parseCommandLineArgs in app.py. -clahey

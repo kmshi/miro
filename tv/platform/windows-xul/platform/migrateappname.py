@@ -19,6 +19,7 @@ from miro import util
 from miro.platform.config import _appDataDirectory, _baseMoviesDirectory
 import os
 import os.path
+from miro import app
 from miro import config
 from miro import prefs
 from miro.platform import resources
@@ -29,10 +30,9 @@ def migrateSupport(oldAppName, newAppName):
     global migratedSupport
     migratedSupport = False
     # This gets called before config is set up, so we have to cheat
-    templateVars = util.readSimpleConfigFile(resources.path('app.config'))
     appDataDir = _appDataDirectory
-    oldSupportDir = os.path.join(appDataDir, templateVars['publisher'], oldAppName, 'Support')
-    newSupportDir = os.path.join(appDataDir, templateVars['publisher'], newAppName, 'Support')
+    oldSupportDir = os.path.join(appDataDir, app.configfile['publisher'], oldAppName, 'Support')
+    newSupportDir = os.path.join(appDataDir, app.configfile['publisher'], newAppName, 'Support')
 
     # Migrate support
     if os.path.exists(oldSupportDir):

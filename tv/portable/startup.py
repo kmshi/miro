@@ -114,8 +114,6 @@ def initialize():
     logging.info ("Builder:    %s", config.get(prefs.BUILD_MACHINE))
     logging.info ("Build Time: %s", config.get(prefs.BUILD_TIME))
     util.print_mem_usage("Pre everything memory check")
-    logging.info ("Loading preferences...")
-    config.load()
     eventloop.connect('thread-started', 
             lambda obj, thread: database.set_thread(thread))
     logging.info ("Starting event loop thread")

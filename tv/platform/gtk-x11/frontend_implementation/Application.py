@@ -42,8 +42,7 @@ class Application(HTMLApplication):
         queue.main_thread = threading.currentThread()
         setMainThread()
         gtk.gdk.threads_init()
-        if options.themeName is not None:
-            config.load(options.themeName)
+        config.load(options.themeName)
         self.startup()
         gtk.main()
         app.controller.onShutdown()
