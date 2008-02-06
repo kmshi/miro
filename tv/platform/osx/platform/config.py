@@ -77,10 +77,6 @@ def get(descriptor):
     if descriptor == prefs.MOVIES_DIRECTORY:
         path = os.path.join(MOVIES_DIRECTORY_PARENT,
                 app.configfile.get('shortAppName'))
-        try:
-            os.makedirs(os.path.join(path,'Incomplete Downloads'))
-        except:
-            pass
         return path
 
     elif descriptor == prefs.NON_VIDEO_DIRECTORY:
