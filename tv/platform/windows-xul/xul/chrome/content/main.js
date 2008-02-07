@@ -310,8 +310,9 @@ function minimizeOrRestore()
 
 function onUnload() {
     pybridge.printOut("onUnload"); 
-    if (vlc.playlist.items.count > 0) { 
+    if (vlc && vlc.playlist && vlc.playlist.items.count > 0) { 
         vlc.playlist.stop(); 
+
     } 
     closeApp();
     minimizer.delTrayIcon();
