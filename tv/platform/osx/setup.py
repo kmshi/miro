@@ -232,7 +232,7 @@ class MiroBuild (py2app):
         self.setup_config()
         self.setup_distribution()
         self.setup_options()
-                    
+
     def setup_config(self):
         # Get subversion revision information.
         revision = util.queryRevision(ROOT_DIR)
@@ -277,7 +277,7 @@ class MiroBuild (py2app):
         self.distribution.ext_modules.append(self.get_fasttypes_ext())
         self.distribution.ext_modules.append(self.get_libtorrent_ext())
 
-        self.distribution.packages = [
+        self.packages = self.distribution.packages = [
             'miro',
             'miro.dl_daemon',
             'miro.compiled_templates',
