@@ -48,7 +48,6 @@ try:
     from miro import menubar
     from miro import feed
     from miro import database
-    from miro.platform.config import getSpecialFolder
     from miro.platform.frontends.html import HTMLDisplay
     from miro.frontend_implementation.UIBackendDelegate import UIBackendDelegate
     from miro.frontend_implementation import MainFrame
@@ -57,6 +56,7 @@ try:
     from miro import views
     from miro import moviedata
     from miro.platform import migrateappname
+    from miro.platform import specialfolders
     from miro import signals
     moviedata.RUNNING_MAX = 1
 except:
@@ -246,9 +246,9 @@ class PyBridge:
         app.controller.onShutdown()
 
     def deleteVLCCache(self):
-        appDataPath = getSpecialFolder("AppData")
-        if appDataPath:
-            vlcCacheDir = os.path.join(appDataPath, "PCF-VLC")
+        if specialfolders.appDataDirectory:
+            vlcCacheDir = os.path.join(specialfolders.appDataDirectory, 
+                    "PCF-VLC")
             shutil.rmtree(vlcCacheDir, ignore_errors=True)
 
     def shortenDirectoryName(self, path):
@@ -261,7 +261,7 @@ class PyBridge:
         ]
 
         for name in tries:
-            virtualPath = getSpecialFolder(name)
+            virtualPath = specialfolders.getSpecialFolder(name)
             if virtualPath is None:
                 continue
             if path == virtualPath:
@@ -369,6 +369,7 @@ class PyBridge:
         for x in range(len(args)-1):
             if args[x] == '--theme':
                 theme = args[x+1]
+                args[x:x+2] = []
                 break
         config.load(theme)
 
@@ -637,7 +638,7 @@ class PyBridge:
         frontend.startup.cancelSearch()
 
     def getSpecialFolder(self, name):
-        return getSpecialFolder(name)
+        return specialfolders.getSpecialFolder(name)
 
     def extractFinish (self, duration, screenshot_success):
         app.controller.videoDisplay.extractFinish(duration, screenshot_success)
