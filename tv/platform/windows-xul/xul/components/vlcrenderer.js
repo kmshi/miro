@@ -38,7 +38,7 @@ VLCRenderer.prototype = {
       return this;
     throw Components.results.NS_ERROR_NO_INTERFACE;
   },
-  hasVLC: function() {
+  hasVLC: function(func, param1, param2, param3) {
     if (this.vlc == null) {
       writelog("VLC Missing!");
       return false; 
@@ -47,22 +47,31 @@ VLCRenderer.prototype = {
     }
   },
   init: function(win) {
-    this.document = win.document;
-    var videoBrowser = this.document.getElementById("mainDisplayVideo");
     try {
+      this.document = win.document;
+      var videoBrowser = this.document.getElementById("mainDisplayVideo");
       this.vlc = videoBrowser.contentDocument.getElementById("video1");
+      this.timer = Components.classes["@mozilla.org/timer;1"].
+          createInstance(Components.interfaces.nsITimer);
+      this.timer2 = Components.classes["@mozilla.org/timer;1"].
+          createInstance(Components.interfaces.nsITimer);
+      this.active = false;
+      this.startedPlaying = false;
+      this.item = null;
+      this.playTime = 0;
+      this.volume = 0;
+      var x = this.vlc.playlist.isPlaying; // Check to see if it's REALLY initialized
     } catch(e) {
-      writelog("Error initializing VLC");
+      writelog("Error initializing VLC. Retrying...");
+      var callback = {
+	  notify: function(timer) { this.vlcr.init(win); }
+      };
+      callback.vlcr = this;
+      var timer = Components.classes["@mozilla.org/timer;1"].
+                  createInstance(Components.interfaces.nsITimer);
+      timer.initWithCallback(callback, 500,
+				  Components.interfaces.nsITimer.TYPE_ONE_SHOT);
     }
-    this.timer = Components.classes["@mozilla.org/timer;1"].
-          createInstance(Components.interfaces.nsITimer);
-    this.timer2 = Components.classes["@mozilla.org/timer;1"].
-          createInstance(Components.interfaces.nsITimer);
-    this.active = false;
-    this.startedPlaying = false;
-    this.item = null;
-    this.playTime = 0;
-    this.volume = 0;
   },
 
   doScheduleUpdates: function() {
@@ -228,6 +237,10 @@ VLCRenderer.prototype = {
       }
       this.showPlayButton();
   },
+  // This should NEVER be called from Python code
+  isPlayingJSONLY: function () {
+    return this.vlc.playlist.isPlaying;
+  },
 
   pauseForDrag: function() {
     if (!this.hasVLC()) return;
@@ -265,11 +278,29 @@ VLCRenderer.prototype = {
     pyCallback.makeCallbackFloat(rv);
   },
 
+  // To avoid threading troubles, only call this from JavaScript
+  getDurationJSONLY: function(pyCallback) {
+    if (!this.hasVLC()) return;
+    try {
+      rv = this.vlc.input.length;
+    } catch (e) {
+      rv = -1;
+    }
+    return rv;
+  },
+
   getCurrentTime: function(pyCallback) {
     if (!this.hasVLC()) return;
       var rv;
       rv = this.vlc.input.time;
       pyCallback.makeCallbackFloat(rv);
+  },
+
+  getCurrentTimeJSONLY: function(pyCallback) {
+    if (!this.hasVLC()) return;
+      var rv;
+      rv = this.vlc.input.time;
+      return rv;
   },
 
   setVolume: function(level) {
