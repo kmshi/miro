@@ -24,6 +24,7 @@ This is setup in config.load().
 """
 
 import logging
+import traceback
 
 from miro import app
 from miro import util
@@ -36,12 +37,15 @@ class AppConfig(object):
         self.load_theme(theme)
 
     def load_theme(self, theme):
+        self.theme_vars = {}
         if theme is not None:
             logging.info("Using theme %s" % theme)
             theme_app_config = resources.theme_path(theme, 'app.config')
-            self.theme_vars = util.readSimpleConfigFile(theme_app_config)
-        else:
-            self.theme_vars = {}
+            try:
+                self.theme_vars = util.readSimpleConfigFile(theme_app_config)
+            except EnvironmentError:
+                logging.warn("Error loading theme: %s\n%s", 
+                        theme_app_config, traceback.format_exc())
 
     def get(self, key, useThemeData=True):
         if useThemeData and key in self.theme_vars:

@@ -49,3 +49,6 @@ def absoluteUrl(absolute_path):
     """Like url, but without adding the resource directory.
     """
     return u"file://%s" % urllib.quote(absolute_path)
+
+def theme_path(theme, relative_path):
+    return os.path.join('/usr/share/miro/themes', theme, relative_path)

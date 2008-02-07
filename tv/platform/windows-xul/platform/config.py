@@ -20,60 +20,18 @@ import _winreg
 import cPickle
 import string
 import tempfile
-import ctypes
 
 from miro import app
 from miro import prefs
 from miro import util
 from miro.platform import proxyfind
 from miro.platform import resources
+from miro.platform import specialfolders
 
 proxy_info = proxyfind.get_proxy_info()
 
-_specialFolderCSIDLs = {
-    'AppData': 0x001a,
-    "My Music": 0x000d,
-    "My Pictures": 0x0027,
-    "My Videos": 0x000e,
-    "My Documents": 0x0005,
-    "Desktop": 0x0000,
-    "Common AppData": 0x0023,
-}
-
-def getSpecialFolder(name):
-    """Get the location of a special folder.  name should be one of the
-    following: 'AppData', 'My Music', 'My Pictures', 'My Videos', 
-    'My Documents', 'Desktop'.
-
-    The path to the folder will be returned, or None if the lookup fails
-
-    """
-
-    buf = ctypes.create_unicode_buffer(260)
-    buf2 = ctypes.create_unicode_buffer(1024) 
-    SHGetSpecialFolderPath = ctypes.windll.shell32.SHGetSpecialFolderPathW
-    GetShortPathName = ctypes.windll.kernel32.GetShortPathNameW
-    csidl = _specialFolderCSIDLs[name]
-    if SHGetSpecialFolderPath(None, buf, csidl, False):
-        if GetShortPathName(buf, buf2, 1024):
-            return buf2.value
-        else:
-            return buf.value
-    else:
-        return None
-
-_appDataDirectory = getSpecialFolder('AppData')
-_commonAppDataDirectory = getSpecialFolder("Common AppData")
-_baseMoviesDirectory = getSpecialFolder('My Videos')
-_nonVideoDirectory = getSpecialFolder('Desktop')
-
-# The "My Videos" folder isn't guaranteed to be listed. If it isn't
-# there, we do this hack.
-if _baseMoviesDirectory is None:
-    _baseMoviesDirectory = os.path.join(getSpecialFolder('My Documents'),'My Videos')
-
 def _getMoviesDirectory():
-    path = os.path.join(_baseMoviesDirectory, app.configfile['shortAppName'])
+    path = os.path.join(specialfolders.baseMoviesDirectory, app.configfile['shortAppName'])
     try:
         os.makedirs(os.path.join(path, 'Incomplete Downloads'))
     except:
@@ -83,23 +41,10 @@ def _getMoviesDirectory():
 def _getSupportDirectory():
     # We don't get the publisher and long app name from the config so
     # changing the app name doesn't change the support directory
-    path = os.path.join(_appDataDirectory,
+    path = os.path.join(specialfolders.appDataDirectory,
                         u'Participatory Culture Foundation',
                         u'Miro',
                         u'Support')
-    try:
-        os.makedirs(path)
-    except:
-        pass
-    return path
-
-def _getThemeDirectory():
-    # We don't get the publisher and long app name from the config so
-    # changing the app name doesn't change the support directory
-    path = os.path.join(_commonAppDataDirectory,
-                        u'Participatory Culture Foundation',
-                        u'Miro',
-                        u'Themes')
     try:
         os.makedirs(path)
     except:
@@ -130,11 +75,8 @@ def get(descriptor):
     if descriptor == prefs.MOVIES_DIRECTORY:
         return _getMoviesDirectory()
 
-    elif descriptor == prefs.THEME_DIRECTORY:
-        return _getThemeDirectory()
-
     elif descriptor == prefs.NON_VIDEO_DIRECTORY:
-        return _nonVideoDirectory
+        return specialfolders.nonVideoDirectory
 
     elif descriptor == prefs.GETTEXT_PATHNAME:
         return resources.path("locale")

@@ -97,9 +97,6 @@ def get(descriptor):
             os.makedirs (value)
         except:
             pass
-    elif descriptor == prefs.THEME_DIRECTORY:
-        value = '/usr/share/miro/themes'
-
     elif descriptor == prefs.NON_VIDEO_DIRECTORY:
         value = os.path.expanduser('~/Desktop')
 

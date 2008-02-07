@@ -19,6 +19,8 @@ import os, sys
 import re
 import urllib
 
+from miro.platform import specialfolders
+
 # Strategy: ask the directory service for
 # NS_XPCOM_CURRENT_PROCESS_DIR, the directory "associated with this
 # process," which is read to mean the root of the Mozilla
@@ -51,3 +53,19 @@ def absoluteUrl(absolute_path):
     """
     absolute_path = absolute_path.encode('utf_8')
     return u"file:///" + urllib.quote(absolute_path, safe=":~\\")
+
+def _getThemeDirectory():
+    # We don't get the publisher and long app name from the config so
+    # changing the app name doesn't change the support directory
+    path = os.path.join(specialfolders.commonAppDataDirectory,
+                        u'Participatory Culture Foundation',
+                        u'Miro',
+                        u'Themes')
+    try:
+        os.makedirs(path)
+    except:
+        pass
+    return path
+
+def theme_path(theme, relative_path):
+    return os.path.join(_getThemeDirectory(), theme, relative_path)
