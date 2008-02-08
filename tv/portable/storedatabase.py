@@ -110,6 +110,16 @@ class SavableObject:
     always safely unpickle them.
     """
 
+    # This is a complete hack to prevent problems if data is saved with a
+    # newer version of Miro and an older version of Miro tries to open it.
+    # Now adays the name of this module is "miro.storedatabase", but for older
+    # versions it's just "storedatabase".  Hacking the module name here
+    # changes where pickle tries to unpickle it from.
+    #
+    # In both cases "storedatabase" works, because we try to unpickle it from
+    # inside the miro directory.
+    __module__ = 'storedatabase'
+
     def __init__(self, classString):
         self.classString = classString
         self.savedData = {}
