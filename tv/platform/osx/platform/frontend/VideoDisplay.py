@@ -1,5 +1,5 @@
 # Miro - an RSS based video player application
-# Copyright (C) 2005-2007 Participatory Culture Foundation
+# Copyright (C) 2005-2008 Participatory Culture Foundation
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,6 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+# In addition, as a special exception, the copyright holders give
+# permission to link the code of portions of this program with the OpenSSL
+# library.
+#
+# You must obey the GNU General Public License in all respects for all of
+# the code used other than OpenSSL. If you modify file(s) with this
+# exception, you may extend this exception to your version of the file(s),
+# but you are not obligated to do so. If you do not wish to do so, delete
+# this exception statement from your version. If you delete this exception
+# statement from all source files in the program, then also delete it here.
 
 import time
 import logging
@@ -58,8 +69,8 @@ objc.loadBundleFunctions(coreServicesBundle, globals(), ((u'UpdateSystemActivity
 
 class PlaybackController (PlaybackControllerBase):
     
-    def playItemExternallyByID(self, itemID):
-	item = PlaybackControllerBase.playItemExternallyByID(self, itemID)
+    def playItemExternally(self, itemID):
+        item = PlaybackControllerBase.playItemExternally(self, itemID)
         moviePath = item.getVideoFilename()
         moviePath = filenameTypeToOSFilename(moviePath)
 
@@ -84,19 +95,9 @@ class VideoDisplay (VideoDisplayBase):
         VideoDisplayBase.__init__(self)
         self.controller = VideoDisplayController.getInstance()
         self.controller.videoDisplay = self
-	self.nextItem = None
-	self.nextRenderer = None
 
     def initRenderers(self):
         self.renderers.append(QuicktimeRenderer(self.controller))
-
-    def setRendererAndCallback(self, anItem, internal, external):
-        for renderer in self.renderers:
-            if renderer.canPlayFile(anItem.getFilename()):
-	        self.selectItem(anItem, renderer)
-                internal()
-                return
-        external()
 
     def setExternal(self, external):
         VideoDisplayBase.setExternal(self, external)
@@ -105,19 +106,14 @@ class VideoDisplay (VideoDisplayBase):
 
     def selectItem(self, item, renderer):
         VideoDisplayBase.selectItem(self, item, renderer)
-	# We can't select the item in the display controller
-	# until we've initialized the display, so we store it here
-	self.nextItem = item
-	self.nextRenderer = renderer
+        self.controller.selectItem(item, renderer)
  
     def play(self):
         VideoDisplayBase.play(self)
-        self.controller.selectItem(self.nextItem, self.nextRenderer)
         self.controller.play()
 
     def playFromTime(self, startTime):
         VideoDisplayBase.playFromTime(self, startTime)
-        self.controller.selectItem(self.nextItem, self.nextRenderer)
         self.controller.play()
 
     def pause(self):
@@ -673,7 +669,7 @@ class FullScreenPalette (NSWindow):
         threads.warnIfNotOnMainThread('FullScreenPalette.reveal')
         if not self.isVisible():
             self.update_(nil)
-            app.controller.videoDisplay.getVolume(lambda v: self.volumeSlider.setFloatValue_(v))
+            self.volumeSlider.setFloatValue_(app.controller.videoDisplay.getVolume())
             screenOrigin = parent.screen().frame().origin
             screenSize = parent.screen().frame().size
             height = self.frame().size.height
@@ -719,8 +715,8 @@ class FullScreenPalette (NSWindow):
         pass
         
     def update_(self, timer):
-        self.renderer.getDisplayTime(lambda t: self.timeIndicator.setStringValue_(unicode(t)))
-        self.renderer.getProgress(lambda p: self.progressSlider.setFloatValue_(p))
+        self.timeIndicator.setStringValue_(unicode(self.renderer.getDisplayTime()))
+        self.progressSlider.setFloatValue_(self.renderer.getProgress())
             
     def progressSliderWasClicked(self, slider):
         if app.controller.videoDisplay.isPlaying:
