@@ -41,9 +41,11 @@ function onload() {
   setCloseToTray(pybridge.minimizeToTray());
   document.getElementById('warn-on-quit').checked = pybridge.getWarnIfDownloadingOnQuit();
   setCheckEvery(pybridge.getCheckEvery());
+  setAutoDownloadDefault(pybridge.getAutoDownloadDefault());
   setMoviesDir(pybridge.getMoviesDirectory());
   originalMoviesDir = pybridge.getMoviesDirectory();
   setMaxManual(pybridge.getMaxManual());
+  setMaxAuto(pybridge.getMaxAuto());
   setHasMinDiskSpace(pybridge.getPreserveDiskSpace());
   setMinDiskSpace(pybridge.getPreserveDiskSpaceAmount());
   setExpire(pybridge.getExpireAfter());
@@ -118,7 +120,16 @@ function setCheckEvery(minutes) {
 }
 
 function checkEveryChange(minutes) {
-   pybridge.setCheckEvery(parseInt(minutes));
+  pybridge.setCheckEvery(parseInt(minutes));
+}
+
+function setAutoDownloadDefault(value) {
+  var autodefault = document.getElementById("autodownloaddefault");
+  autodefault.value = value; 
+}
+
+function changeAutoDownloadDefault(value) {
+  pybridge.setAutoDownloadDefault(value);
 }
 
 function setMoviesDir(directory) {
@@ -233,12 +244,24 @@ function setMaxManual(max) {
     document.getElementById("maxmanual").value = max;
 }
 
+function setMaxAuto(max) {
+    document.getElementById("maxauto").value = max;
+}
+
 function maxManualChange() {
   var textbox = document.getElementById("maxmanual");
   var value = parseInt(textbox.value);
   if ((value == 0) || (isNaN(value))) value = 1;
   textbox.value=value;
   pybridge.setMaxManual(value);
+}
+
+function maxAutoChange() {
+  var textbox = document.getElementById("maxauto");
+  var value = parseInt(textbox.value);
+  if ((value == 0) || (isNaN(value))) value = 1;
+  textbox.value=value;
+  pybridge.setMaxAuto(value);
 }
 
 function setMinDiskSpace(min) {

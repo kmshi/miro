@@ -91,6 +91,8 @@ interface pcfIDTVPyBridge : nsISupports
   void setRunAtStartup(in boolean value);
   short getCheckEvery();
   void setCheckEvery(in short value);
+  AString getAutoDownloadDefault();
+  void setAutoDownloadDefault(in AString value);
   AString getMoviesDirectory();
   void changeMoviesDirectory(in AString path, in boolean migrate);
   boolean getLimitUpstream();
@@ -103,6 +105,8 @@ interface pcfIDTVPyBridge : nsISupports
   void setLimitDownstreamAmount(in short value);
   short getMaxManual();
   void setMaxManual(in short value);
+  short getMaxAuto();
+  void setMaxAuto(in short value);
   void startPrefs();
   void updatePrefs();
   boolean getPreserveDiskSpace();

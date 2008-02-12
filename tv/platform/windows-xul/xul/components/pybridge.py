@@ -300,6 +300,10 @@ class PyBridge:
         return config.get(prefs.CHECK_CHANNELS_EVERY_X_MN)
     def setCheckEvery(self, value):
         return config.set(prefs.CHECK_CHANNELS_EVERY_X_MN, value)
+    def getAutoDownloadDefault(self):
+        return config.get(prefs.CHANNEL_AUTO_DEFAULT)
+    def setAutoDownloadDefault(self, value):
+        return config.set(prefs.CHANNEL_AUTO_DEFAULT, value)
     def getMoviesDirectory(self):
         return config.get(prefs.MOVIES_DIRECTORY)
     def changeMoviesDirectory(self, path, migrate):
@@ -324,6 +328,10 @@ class PyBridge:
         return config.get(prefs.MAX_MANUAL_DOWNLOADS)
     def setMaxManual(self, value):
         return config.set(prefs.MAX_MANUAL_DOWNLOADS, value)
+    def getMaxAuto(self):
+        return config.get(prefs.DOWNLOADS_TARGET)
+    def setMaxAuto(self, value):
+        return config.set(prefs.DOWNLOADS_TARGET, value)
     def startPrefs(self):
         startPrefs()
     def updatePrefs(self):
