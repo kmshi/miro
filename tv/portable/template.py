@@ -73,7 +73,7 @@ def fillTemplate(filename, domHandler, platform, eventCookie, bodyTagExtra="", t
         return fillTemplate(domHandler, platform, eventCookie, bodyTagExtra, *args, **kargs)
     else:
         modname = filename.replace('/','.').replace('\\','.').replace('-','_')
-        mod = util.import_last("miro.compiled_templates.%s" % modname)
+        mod = util.import_last("miro.frontends.html.compiled_templates.%s" % modname)
         return mod.fillTemplate(domHandler, platform, eventCookie, bodyTagExtra, *args, **kargs)
 
 # As fillTemplate, but no Javascript calls are made, and no template
