@@ -37,7 +37,7 @@ import threading
 import traceback
 import urllib
 
-from miro.frontends.html import dialogs
+from miro import dialogs
 from miro.gtcache import gettext as _
 from miro import app
 from miro import config
@@ -108,26 +108,6 @@ class Controller(Application):
         if nextfeed is not None:
             logging.info ("Removing global feed %s", url)
             nextfeed.remove()
-
-    def copyCurrentFeedURL(self):
-        tabs = self.selection.getSelectedTabs()
-        if len(tabs) == 1 and tabs[0].isFeed():
-            app.delegate.copyTextToClipboard(tabs[0].obj.getURL())
-
-    def recommendCurrentFeed(self):
-        tabs = self.selection.getSelectedTabs()
-        if len(tabs) == 1 and tabs[0].isFeed():
-            # See also dynamic.js if changing this URL
-            feed = tabs[0].obj
-            query = urllib.urlencode({'url': feed.getURL(), 'title': feed.getTitle()})
-            app.delegate.openExternalURL('http://www.videobomb.com/democracy_channel/email_friend?%s' % (query, ))
-
-    def copyCurrentItemURL(self):
-        tabs = self.selection.getSelectedItems()
-        if len(tabs) == 1 and isinstance(tabs[0], item.Item):
-            url = tabs[0].getURL()
-            if url:
-                app.delegate.copyTextToClipboard(url)
 
     def selectAllItems(self):
         self.selection.itemListSelection.selectAll()

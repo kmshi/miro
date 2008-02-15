@@ -37,7 +37,7 @@ import threading
 import traceback
 
 from miro.clock import clock
-from miro.frontends.html import dialogs
+from miro import dialogs
 from miro.gtcache import gettext as _
 from miro.platform.frontends.html.HTMLDisplay import HTMLDisplay
 from miro import app
@@ -177,9 +177,9 @@ class TemplateDisplay(HTMLDisplay):
                     app.controller.guide.getLastVisitedURL()):
                 self.haveLoaded = True
             elif self.haveLoaded:
-                script = 'top.miro_navigation_frame.guideUnloaded()'
+                script = 'top.guideUnloaded()'
                 if not url.endswith(script):
-                    self.execJS('top.miro_navigation_frame.guideUnloaded()')
+                    self.execJS(script)
             return True
         else:
             return False

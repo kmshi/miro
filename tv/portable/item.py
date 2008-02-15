@@ -55,7 +55,7 @@ from miro import app
 from miro import template
 from miro import downloader
 from miro import config
-from miro.frontends.html import dialogs
+from miro import dialogs
 from miro import eventloop
 from miro import filters
 from miro import prefs
@@ -1542,7 +1542,7 @@ folder will be deleted.""")
                 self.downloader.addItem(other)
                 other.signalChange(needsSave=False)
         
-        signals.system.download_complete(self)
+        signals.system.downloadComplete(self)
 
     def getResizedScreenshot(self, width, height):
         try:

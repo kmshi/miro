@@ -34,7 +34,7 @@ import logging
 
 from miro.gtcache import gettext as _
 from miro.gtcache import ngettext
-from miro.frontends.html import dialogs
+from miro import dialogs
 from miro.frontends.html import templatedisplay
 from miro.platform.frontends.html import MainFrame
 from miro.platform.frontends.html import VideoDisplay
@@ -74,8 +74,17 @@ class HTMLApplication:
         signals.system.connect('startup-failure', self.handleStartupFailure)
         signals.system.connect('loaded-custom-channels',
                 self.handleCustomChannelLoad)
+        signals.system.connect('new-dialog', self.handleDialog)
+        signals.system.connect('theme-first-run', self.handleThemeFirstRun)
         signals.system.connect('shutdown', self.onBackendShutdown)
         startup.initialize()
+
+    def handleThemeFirstRun(self, obj, theme):
+        if config.get(prefs.MAXIMIZE_ON_FIRST_RUN).lower() not in ['false','no','0']:
+            app.delegate.maximizeWindow()
+
+    def handleDialog(self, obj, dialog):
+        app.delegate.runDialog(dialog)
 
     def handleStartupFailure(self, obj, summary, description):
         dialog = dialogs.MessageBoxDialog(summary, description)
@@ -385,4 +394,24 @@ class HTMLApplication:
         handler.updateLastSearchQuery(query)
         handler.performSearch(engine, query)
         self.selection.selectTabByTemplateBase('searchtab')
+
+    def copyCurrentFeedURL(self):
+        tabs = self.selection.getSelectedTabs()
+        if len(tabs) == 1 and tabs[0].isFeed():
+            app.delegate.copyTextToClipboard(tabs[0].obj.getURL())
+
+    def recommendCurrentFeed(self):
+        tabs = self.selection.getSelectedTabs()
+        if len(tabs) == 1 and tabs[0].isFeed():
+            # See also dynamic.js if changing this URL
+            feed = tabs[0].obj
+            query = urllib.urlencode({'url': feed.getURL(), 'title': feed.getTitle()})
+            app.delegate.openExternalURL('http://www.videobomb.com/democracy_channel/email_friend?%s' % (query, ))
+
+    def copyCurrentItemURL(self):
+        tabs = self.selection.getSelectedItems()
+        if len(tabs) == 1 and isinstance(tabs[0], item.Item):
+            url = tabs[0].getURL()
+            if url:
+                app.delegate.copyTextToClipboard(url)
 

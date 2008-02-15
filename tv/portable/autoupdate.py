@@ -28,7 +28,7 @@
 
 from miro import prefs
 from miro import config
-from miro.frontends.html import dialogs
+from miro import dialogs
 import logging
 from miro import eventloop
 from miro import feedparser
@@ -73,7 +73,7 @@ def _handleAppCast(data, upToDateCallback):
         
             if not upToDate:
                 logging.info('New update available.')
-                signals.system.update_available(latest)
+                signals.system.updateAvailable(latest)
             elif upToDateCallback:
                 logging.info('Up to date. Notifying')
                 upToDateCallback()
