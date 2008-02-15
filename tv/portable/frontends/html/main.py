@@ -44,7 +44,7 @@ from miro import autoupdate
 from miro import config
 from miro import eventloop
 from miro import iheartmiro
-from miro import frontendutil
+from miro import menubar
 from miro import opml
 from miro import prefs
 from miro import selection
@@ -79,6 +79,7 @@ class HTMLApplication:
         signals.system.connect('new-dialog', self.handleDialog)
         signals.system.connect('theme-first-run', self.handleThemeFirstRun)
         signals.system.connect('shutdown', self.onBackendShutdown)
+        self.installMenubarImplementations()
         startup.startup()
 
     def handleThemeFirstRun(self, obj, theme):
@@ -91,6 +92,11 @@ class HTMLApplication:
     def handleStartupFailure(self, obj, summary, description):
         dialog = dialogs.MessageBoxDialog(summary, description)
         dialog.run(lambda d: self.cancelStartup())
+
+    def installMenubarImplementations(self):
+        menubar.menubar.addImpl("NewDownload", self.newDownload)
+        menubar.menubar.addImpl("ImportChannels", self.importChannels)
+        menubar.menubar.addImpl("ExportChannels", self.exportChannels)
 
     def onBackendShutdown(self, obj):
         logging.info ("Shutting down frontend")
@@ -267,7 +273,7 @@ class HTMLApplication:
                 description = dialog.textbox_value
             except AttributeError:
                 description = u"Description text not implemented"
-            frontendutil.sendBugReport(report, description, send_dabatase)
+            app.controller.sendBugReport(report, description, send_dabatase)
         chkboxdialog = dialogs.CheckboxTextboxDialog(_("Internal Error"),_("Miro has encountered an internal error. You can help us track down this problem and fix it by submitting an error report."), _("Include entire program database including all video and channel metadata with crash report"), False, _("Describe what you were doing that caused this error"), dialogs.BUTTON_SUBMIT_REPORT, dialogs.BUTTON_IGNORE)
         chkboxdialog.run(callback)
 
@@ -307,9 +313,9 @@ class HTMLApplication:
             return
         downloadsCount = views.downloadingItems.len()
             
-        if (downloadsCount > 0 and config.get(prefs.WARN_IF_DOWNLOADING_ON_QUIT)) or (frontendutil.sendingCrashReport > 0):
+        if (downloadsCount > 0 and config.get(prefs.WARN_IF_DOWNLOADING_ON_QUIT)) or (app.controller.sendingCrashReport > 0):
             title = _("Are you sure you want to quit?")
-            if frontendutil.sendingCrashReport > 0:
+            if app.controller.sendingCrashReport > 0:
                 message = _("Miro is still uploading your crash report. If you quit now the upload will be canceled.  Quit Anyway?")
                 dialog = dialogs.ChoiceDialog(title, message,
                                               dialogs.BUTTON_QUIT,
