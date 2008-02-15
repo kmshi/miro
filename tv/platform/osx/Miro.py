@@ -76,11 +76,11 @@ def launchApplication():
         if os.path.isdir(themeDir):
             theme = os.path.basename(themeDir)
 
-    from miro import startup
-    startup.initialize(theme)
-
     from miro import gtcache
     gtcache.init()
+
+    from miro import startup
+    startup.initialize(theme)
 
     from miro import config
     from miro import prefs

@@ -324,7 +324,7 @@ class AppController (NSObject):
         app.htmlapp.exportChannels()
     
     def shutdown_(self, sender):
-        app.controller.quit()
+        app.htmlapp.quit()
 
     def validateMenuItem_(self, item):
         return item.action() in ('donate:', 'checkForUpdates:', 'showMainWindow:',
