@@ -662,7 +662,7 @@ class MiroClean (Command):
         print "Removing old compiled templates..."
         try:
             template_dir = os.path.join("..","..","portable", "frontends",
-                    "html", "compiled_templates")):
+                    "html", "compiled_templates")
             for filename in os.listdir(template_dir):
                 filename = os.path.join(template_dir, filename)
                 if not filename.startswith(".svn"):
