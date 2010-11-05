@@ -328,6 +328,12 @@ def get_menu():
 
             Menu(_("Convert"), "ConvertMenu", _get_convert_menu()),
 
+            Menu(_("_View"), "ViewMenu", [
+                    MenuItem(_("Title"), "Title"),
+                    MenuItem(_("Album"), "Album"),
+                    MenuItem(_("Artist"), "Artist"),
+                    ]),
+
             Menu(_("_Help"), "HelpMenu", [
                     MenuItem(_("_About %(name)s",
                                {'name': app.config.get(prefs.SHORT_APP_NAME)}),
