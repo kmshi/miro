@@ -329,9 +329,21 @@ def get_menu():
             Menu(_("Convert"), "ConvertMenu", _get_convert_menu()),
 
             Menu(_("_View"), "ViewMenu", [
-                    MenuItem(_("Title"), "Title"),
-                    MenuItem(_("Album"), "Album"),
-                    MenuItem(_("Artist"), "Artist"),
+                    MenuItem(_("_State"), "State"),
+                    MenuItem(_("_Name"), "Name"),
+                    MenuItem(_("_Artist"), "Artist"),
+                    MenuItem(_("Al_bum"), "Album"),
+                    MenuItem(_("_Track"), "Track"),
+                    MenuItem(_("_Year"), "Year"),
+                    MenuItem(_("_Genre"), "Genre"),
+                    MenuItem(_("Rat_ing"), "Rating"),
+                    MenuItem(_("_Feed"), "Feed"),
+                    MenuItem(_("_Date"), "Date"),
+                    MenuItem(_("_Length"), "Length"),
+                    MenuItem(_("S_tatus"), "Status"),
+                    MenuItem(_("Si_ze"), "Size"),
+                    MenuItem(_("_ETA"), "ETA"),
+                    MenuItem(_("_Rate"), "Rate")
                     ]),
 
             Menu(_("_Help"), "HelpMenu", [
