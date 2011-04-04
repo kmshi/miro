@@ -3,9 +3,15 @@ import os
 import sys
 
 def extract_zip(zipfilepath,dest_path):
-    zzz = zipfile.ZipFile(zipfilepath)
-    os.makedirs(dest_path)
-    zzz.extractall(dest_path)
+    try:
+        zzz = zipfile.ZipFile(zipfilepath)
+        os.makedirs(dest_path)
+        zzz.extractall(dest_path)
+    except Exception,e:
+        print "Error happened when extract zip file: %s" % e
+	raise e
+    finally:
+        zzz.close()
 
 def usage():
     print "usage: python unzip.py zipfilepath dest_path"

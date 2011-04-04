@@ -59,21 +59,6 @@ def startup():
         theme = args[index + 1]
         del args[index:index+1]
 
-    if '--pydevd' in args:
-        #why os.getenv("PYDEVD") or os.environ.get("PYDEVD") return None???
-	#so you have to add absolute pydev debug source path here...
-        import sys
-	import os
-	
-	#dist_path = os.path.dirname(sys.path[0])
-	#sys.path.append(os.path.join(dist_path,'..','build','lib.win32-2.6'))
-	#sys.path.append(os.path.join(dist_path,'..','build','bdist.win32','winexe','collect-2.6'))
-	#sys.path.pop(0)
-
-	sys.path.append(r"E:\shi_lab\miro-groups\eclipse\dropins\plugins\org.python.pydev.debug_1.6.5.2011020317\pysrc")
-	import pydevd
-	pydevd.settrace()
-
     from miro import startup
     startup.initialize(theme)
 
