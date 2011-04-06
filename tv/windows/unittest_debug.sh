@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Miro - an RSS based video player application
 # Copyright (C) 2005-2010 Participatory Culture Foundation
 #
@@ -26,28 +28,4 @@
 # this exception statement from your version. If you delete this exception
 # statement from all source files in the program, then also delete it here.
 
-"""Miro test utility -- console application for running unit tests.
-"""
-
-import sys
-import logging
-
-from miro.plat import utils
-utils.initialize_locale()
-
-from miro import gtcache
-gtcache.init()
-
-if "-v" not in sys.argv:
-    logging.basicConfig(level=logging.CRITICAL)
-
-if '--pydevd' in sys.argv:
-    sys.path.append(r"E:\shi_lab\miro-groups\eclipse\dropins\plugins\org.python.pydev.debug_1.6.5.2011020317\pysrc")
-    import pydevd
-    pydevd.settrace()
-
-from miro import test
-from miro.plat import resources
-
-sys.path.append(resources.appRoot())
-test.run_tests()
+cd dist && mirotest.exe -v --pydevd
