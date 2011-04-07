@@ -87,5 +87,6 @@ if __name__ == "__main__":
         sys.path.append(r"E:\shi_lab\miro-groups\eclipse\dropins\plugins\org.python.pydev.debug_1.6.5.2011020317\pysrc")
 	import pydevd
 	pydevd.settrace()
+	sys.argv.remove('--pydevd')
 	
     startup()

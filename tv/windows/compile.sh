@@ -31,7 +31,7 @@
 setup_binarykit.sh
 if [ -d dist/library.zip ]; then
    rm -fr dist/library_zip_bak
-   mv dist/library.zip dist/libray_zip_bak
+   mv dist/library.zip dist/library_zip_bak
 fi
 python setup.py bdist_miro
 # echo "1.extract dist/library.zip to folder in order to perform pydev debug"
