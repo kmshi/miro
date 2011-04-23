@@ -28,15 +28,4 @@
 # this exception statement from your version. If you delete this exception
 # statement from all source files in the program, then also delete it here.
 
-setup_binarykit.sh
-if [ -d dist/library.zip ]; then
-   rm -fr dist/library_zip_bak
-   mv dist/library.zip dist/library_zip_bak
-fi
-python setup.py bdist_miro
-# echo "1.extract dist/library.zip to folder in order to perform pydev debug"
-python unzip.py dist/library.zip dist/library_tmp
-rm -f dist/library.zip
-mv dist/library_tmp dist/library.zip
-# echo "2.copy build/lib.win32-2.6 to dist/library.zip folder"
-cp -R build/lib.win32-2.6/miro dist/library.zip/
+cd dist && mirotest.exe -v --pydevd

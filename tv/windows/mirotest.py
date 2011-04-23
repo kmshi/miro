@@ -41,6 +41,12 @@ gtcache.init()
 if "-v" not in sys.argv:
     logging.basicConfig(level=logging.CRITICAL)
 
+if '--pydevd' in sys.argv:
+    sys.path.append(r"E:\shi_lab\miro-groups\eclipse\dropins\plugins\org.python.pydev.debug_1.6.5.2011020317\pysrc")
+    import pydevd
+    pydevd.settrace()
+    sys.argv.remove('--pydevd')
+
 from miro import test
 from miro.plat import resources
 

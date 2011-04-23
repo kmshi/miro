@@ -46,12 +46,12 @@ authoritative source.
 Debug--compile and debug with Pydev1.6.5 plugin for eclipse(added by kmshi)
 ===========================================================================
 
-1. check Miro.py to make sure the absolute Pydevd src path in it are correct.
+1. check Miro.py(and Mirotest.py) to make sure the absolute Pydevd src path in it are correct.
 2. run ./compile.sh
 3. create a Pydev project, and import dist/library.zip/miro into the project srcby link
 4. in Debug perspective, start Pydev debug server to listen
 5. set breakpoints in the Pydev project
-6. run ./debug.sh
+6. run ./debug.sh  or ./unittest_debug.sh 
 
 
 To build an installer
