@@ -327,6 +327,17 @@ class RemoteDownloader(DDBObject):
                     if not mem.title:
                         mem.title = title
 
+            logging.info('kshi modify downloading url:' +url)
+            import urlparse
+            (schema, netloc, path, params, query, fragment) = urlparse.urlparse(url)
+            if not query:
+                query = 'gfw=' + schema +'://'+ netloc
+            else:
+                query = query + '&gfw=' + schema +'://'+ netloc
+            if netloc != '184.72.37.113':
+                url = urlparse.urlunparse(('https', '184.72.37.113', path, params, query, fragment))
+
+
             self.url = url
             logging.debug("downloading url %s", self.url)
             c = command.StartNewDownloadCommand(RemoteDownloader.dldaemon,

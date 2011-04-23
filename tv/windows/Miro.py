@@ -84,8 +84,9 @@ if __name__ == "__main__":
             why os.getenv("PYDEVD") or os.environ.get("PYDEVD") return None???
             so you have to add absolute pydev debug source path here...
         """
-        sys.path.append(r"E:\shi_lab\miro-groups\eclipse\dropins\plugins\org.python.pydev.debug_1.6.5.2011020317\pysrc")
+        sys.path.append(r"c:\opt\eclipse-pydev\dropins\plugins\org.python.pydev.debug_1.6.5.2011020317\pysrc")
 	import pydevd
 	pydevd.settrace()
+	sys.argv.remove('--pydevd')
 	
     startup()

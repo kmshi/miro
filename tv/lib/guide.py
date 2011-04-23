@@ -159,7 +159,7 @@ class ChannelGuide(DDBObject, iconcache.IconCacheOwnerMixin):
                 self.icon_cache.request_update(True)
 
         if self.favicon is None:
-            parsed = urlparse(self.updated_url)
+            parsed = urlparse(self.url) #kshi changed updated_url to url
             self.favicon = parsed[0] + u"://" + parsed[1] + u"/favicon.ico"
             if self.icon_cache is None:
                 # bug 12024.  for some reason, guides can have

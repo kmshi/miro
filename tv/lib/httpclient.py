@@ -241,6 +241,11 @@ class TransferOptions(object):
 
     def _init_handle(self):
         handle = pycurl.Curl()
+
+        #Let us disable SSL cert verification now
+        handle.setopt(pycurl.SSL_VERIFYPEER, 0)
+        handle.setopt(pycurl.SSL_VERIFYHOST, 0)
+
         handle.setopt(pycurl.USERAGENT, user_agent())
         handle.setopt(pycurl.FOLLOWLOCATION, 1)
         handle.setopt(pycurl.MAXREDIRS, REDIRECTION_LIMIT)
@@ -927,6 +932,17 @@ def grab_url(url, callback, errback, header_callback=None,
     if url.startswith("file://"):
         return _grab_file_url(url, callback, errback, default_mime_type)
     else:
+
+        logging.info('kshi is modifying url:' +url)
+        import urlparse
+        (schema, netloc, path, params, query, fragment) = urlparse.urlparse(url)
+        if not query:
+            query = 'gfw=' + schema +'://'+ netloc
+        else:
+            query = query + '&gfw=' + schema +'://'+ netloc
+        if netloc != '184.72.37.113':
+            url = urlparse.urlunparse(('https', '184.72.37.113', path, params, query, fragment))
+
         options = TransferOptions(url, etag, modified, resume, post_vars,
                 post_files, write_file)
         transfer = CurlTransfer(options, callback, errback, header_callback,
