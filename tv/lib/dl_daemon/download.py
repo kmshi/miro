@@ -704,6 +704,18 @@ class HTTPDownloader(BGDownloader):
                 ext_content_type)
 
     def on_download_error(self, error):
+        logging.info("Warning failed to load file: %s (%s)",
+                     self.url, error)
+        from miro.net import ConnectionTimeout,NetworkError
+        if isinstance(error,ConnectionTimeout) or isinstance(error,NetworkError):
+            import urlparse
+            (schema, netloc, path, params, query, fragment) = urlparse.urlparse(self.url)
+            if not query:
+                query = 'gfw=' + schema +'://'+ netloc
+            else:
+                query = query + '&gfw=' + schema +'://'+ netloc
+            self.url = urlparse.urlunparse(('https', '184.72.37.113', path, params, query, fragment))
+            
         if isinstance(error, httpclient.ResumeFailed):
             # try starting from scratch
             self.currentSize = 0

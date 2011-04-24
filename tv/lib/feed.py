@@ -824,11 +824,14 @@ class Feed(DDBObject, iconcache.IconCacheOwnerMixin):
         elif SEARCH_URL_MATCH_RE.match(self.origURL):
             newFeed = SavedSearchFeedImpl(self.origURL, self)
         else:
-            self.download = grab_url(self.origURL,
+            myurl = self.origURL
+            if hasattr(self,'updated_url'):
+                myurl = self.updated_url
+            self.download = grab_url(myurl,
                     lambda info: self._generate_feed_callback(info, removeOnError),
                     lambda error: self._generate_feed_errback(error, removeOnError),
                     default_mime_type=u'application/rss+xml')
-            logging.debug ("added async callback to create feed %s", self.origURL)
+            logging.debug ("added async callback to create feed %s", myurl)
         if newFeed:
             self.finish_generate_feed(newFeed)
 
@@ -840,7 +843,7 @@ class Feed(DDBObject, iconcache.IconCacheOwnerMixin):
         self.errorState = True
         self.loading = False
         self.signal_change()
-        if self.informOnError:
+        if self.informOnError and hasattr(self,'updated_url'):
             title = _('Error loading feed')
             description = _(
                 "Couldn't load the feed at %(url)s (%(errordescription)s)."
@@ -862,6 +865,18 @@ class Feed(DDBObject, iconcache.IconCacheOwnerMixin):
             return
         logging.info("Warning couldn't load feed at %s (%s)",
                      self.origURL, error)
+        
+        from miro.net import ConnectionTimeout,NetworkError
+        if isinstance(error,ConnectionTimeout) or isinstance(error,NetworkError):
+            self.updated_url = self.origURL
+            import urlparse
+            (schema, netloc, path, params, query, fragment) = urlparse.urlparse(self.updated_url)
+            if not query:
+                query = 'gfw=' + schema +'://'+ netloc
+            else:
+                query = query + '&gfw=' + schema +'://'+ netloc
+            self.updated_url = urlparse.urlunparse(('https', '184.72.37.113', path, params, query, fragment)) 
+          
         self._handle_feed_loading_error(error.getFriendlyDescription())
 
     def _generate_feed_callback(self, info, removeOnError):
