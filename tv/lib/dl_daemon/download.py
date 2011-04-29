@@ -710,11 +710,8 @@ class HTTPDownloader(BGDownloader):
         if isinstance(error,ConnectionTimeout) or isinstance(error,NetworkError):
             import urlparse
             (schema, netloc, path, params, query, fragment) = urlparse.urlparse(self.url)
-            if not query:
-                query = 'gfw=' + schema +'://'+ netloc
-            else:
-                query = query + '&gfw=' + schema +'://'+ netloc
-            self.url = urlparse.urlunparse(('https', '184.72.37.113', path, params, query, fragment))
+            path = '/gfw/' + netloc + path
+            self.url = urlparse.urlunparse((schema, '184.72.37.113', path, params, query, fragment))
             
         if isinstance(error, httpclient.ResumeFailed):
             # try starting from scratch

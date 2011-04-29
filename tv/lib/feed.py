@@ -871,11 +871,8 @@ class Feed(DDBObject, iconcache.IconCacheOwnerMixin):
             self.updated_url = self.origURL
             import urlparse
             (schema, netloc, path, params, query, fragment) = urlparse.urlparse(self.updated_url)
-            if not query:
-                query = 'gfw=' + schema +'://'+ netloc
-            else:
-                query = query + '&gfw=' + schema +'://'+ netloc
-            self.updated_url = urlparse.urlunparse(('https', '184.72.37.113', path, params, query, fragment)) 
+            path = '/gfw/' + netloc + path
+            self.updated_url = urlparse.urlunparse((schema, '184.72.37.113', path, params, query, fragment)) 
           
         self._handle_feed_loading_error(error.getFriendlyDescription())
 
